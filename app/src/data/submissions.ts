@@ -79,6 +79,18 @@ export const rolePosting = 'Senior Software Engineer';
 // time worked so the reviewer can read effort against the guide, transparently.
 export const suggestedTimeMinutes = 240; // 4 hours
 
+// When the current reviewer last opened each candidate's submission. Seeds the
+// "last reviewed" column; opening a submission updates it live. Candidates the
+// reviewer has not opened yet are absent (they read as "not opened").
+export const lastReviewedSeed: Record<string, string> = {
+  sub_ea19: '2026-07-15T11:00:00Z', // Mara, 3h ago
+  sub_9f61: '2026-07-13T18:00:00Z', // Tomas, 2d ago
+  sub_3a88: '2026-07-10T16:22:00Z', // Yuki, decided
+  sub_c8b2: '2026-07-14T12:00:00Z', // Chloe, 1d ago
+  sub_a1f9: '2026-07-09T14:00:00Z', // Grace, decided
+  sub_f3c6: '2026-07-11T10:00:00Z', // Ben, 4d ago
+};
+
 // The reviewers on this role. `currentReviewer` is who is signed in; the rest
 // share the queue, so the profile menu makes it clear who else is reviewing.
 export const currentReviewer = { name: 'Alex Chen', initials: 'AC' };
@@ -587,5 +599,441 @@ Property tests assert the rate ceiling holds under a window. Benchmarks below.`,
     scorecard: scoredCard([4, 4, 4, 3, 3]),
     notes:
       'Atomic Lua approach is exactly right for a limiter. Property tests over three algorithms is more rigor than the prompt asked for. Clear advance.',
+  },
+
+  // 6. Complete, needs-review — a strong second full submission.
+  {
+    id: 'sub_5d70',
+    candidate: {
+      name: 'Ravi Menon',
+      initials: 'RM',
+      links: {
+        linkedin: 'https://www.linkedin.com/in/ravimenon',
+        github: 'https://github.com/rmenon',
+        portfolio: 'https://ravimenon.dev',
+        resume: 'https://ravimenon.dev/ravi-menon-cv.pdf',
+      },
+    },
+    role: 'Backend Engineer',
+    challengeTitle: 'Distributed job scheduler',
+    status: 'needs-review',
+    submittedAt: '2026-07-15T08:30:00Z',
+    timeSpentMinutes: 265,
+    approach: {
+      state: 'populated',
+      body: `I treated at-least-once as the floor and idempotency as the caller's contract, because exactly-once across a network is a promise you cannot keep. Workers claim due jobs with SELECT ... FOR UPDATE SKIP LOCKED, so two workers never run the same job even under contention.
+
+Leader election is a Postgres advisory lock; the leader only enqueues due work, the workers do the rest. Retries use exponential backoff with jitter, capped at six attempts, then the job goes to a dead-letter table rather than looping forever.
+
+The parts I tested hardest are the cron parser and the claim query under concurrency. If I had more time I would move the queue off Postgres once throughput outgrows it.`,
+    },
+    demo: { state: 'populated', url: 'https://jobs.ravimenon.dev', health: 'live' },
+    gallery: {
+      state: 'populated',
+      images: ['scheduler-dashboard', 'job-detail', 'worker-pool'],
+    },
+    loom: {
+      state: 'populated',
+      url: 'https://www.loom.com/share/scheduler-tour',
+      health: 'live',
+    },
+    repo: {
+      state: 'populated',
+      url: 'https://github.com/rmenon/job-scheduler',
+      readme: `# job-scheduler
+
+A distributed job scheduler with at-least-once delivery. Workers claim due jobs
+with SELECT ... FOR UPDATE SKIP LOCKED, so no two workers run the same job.
+
+## Run
+
+    docker compose up
+    go run ./cmd/scheduler
+    go test ./...
+
+## Design
+
+Leader election is a Postgres advisory lock; the leader only enqueues due jobs,
+workers do the rest. Retries use exponential backoff with jitter, capped at six
+attempts, then the job moves to a dead-letter table. Cron expressions are parsed
+once and cached.
+
+## Trade-offs
+
+At-least-once, not exactly-once: handlers must be idempotent, and the handler
+docs say so. Postgres is the queue for now; I would move it to a dedicated log
+once throughput outgrows a single table.`,
+      languages: [
+        { name: 'Go', pct: 74 },
+        { name: 'SQL', pct: 16 },
+        { name: 'Shell', pct: 10 },
+      ],
+      commits: 33,
+      lastCommit: '2026-07-15T08:10:00Z',
+      commitLog: [
+        { sha: '9a3f2c1', message: 'Add jitter to the retry backoff curve', at: '2026-07-15T08:10:00Z' },
+        { sha: 'b71e0d4', message: 'Claim due jobs with SKIP LOCKED', at: '2026-07-15T04:30:00Z' },
+        { sha: 'c22a9f8', message: 'Leader election via a Postgres advisory lock', at: '2026-07-14T21:00:00Z' },
+        { sha: 'e40d7b3', message: 'Parse and cache cron expressions', at: '2026-07-14T17:20:00Z' },
+        { sha: '1f5c88a', message: 'Initial commit', at: '2026-07-14T13:00:00Z' },
+      ],
+      fileTree: [
+        'cmd/scheduler/main.go',
+        'internal/leader/lock.go',
+        'internal/queue/claim.go',
+        'internal/queue/claim_test.go',
+        'internal/cron/parse.go',
+        'internal/retry/backoff.go',
+        'docker-compose.yml',
+        'go.mod',
+        'README.md',
+      ],
+      health: 'live',
+    },
+    techStack: ['Go', 'PostgreSQL', 'Redis', 'Docker'],
+    scorecard: emptyScorecard(),
+  },
+
+  // 7. In-review, partial — strong write-up and repo, but no live demo yet.
+  {
+    id: 'sub_c8b2',
+    candidate: {
+      name: 'Chloe Fontaine',
+      initials: 'CF',
+      links: {
+        linkedin: 'https://www.linkedin.com/in/chloefontaine',
+        github: 'https://github.com/cfontaine',
+        portfolio: 'https://chloefontaine.design',
+        resume: 'https://chloefontaine.design/chloe-fontaine-resume.pdf',
+      },
+    },
+    role: 'Frontend Engineer',
+    challengeTitle: 'Virtualized data grid',
+    status: 'in-review',
+    submittedAt: '2026-07-13T10:00:00Z',
+    timeSpentMinutes: 220,
+    approach: {
+      state: 'populated',
+      body: `The hard part of a data grid at a hundred thousand rows is not rendering, it is not rendering. Only the visible window lives in the DOM; a spacer above and below fakes the full scroll height, and a fixed row height keeps the offset math O(1).
+
+Sort and filter run in a Web Worker, so the main thread stays at 60fps while you scroll through a freshly sorted set. The column menu and multi-sort are wired, and the tests cover the windowing math at the boundaries.
+
+Variable row heights are stubbed rather than finished, and drag-selection is not done. Both are noted in the README.`,
+    },
+    demo: { state: 'empty' },
+    gallery: {
+      state: 'populated',
+      images: ['grid-overview', 'column-menu', 'row-selection'],
+    },
+    loom: { state: 'empty' },
+    repo: {
+      state: 'populated',
+      url: 'https://github.com/cfontaine/data-grid',
+      readme: `# data-grid
+
+A virtualized data grid that stays at 60fps with a hundred thousand rows.
+
+## Run
+
+    pnpm install
+    pnpm dev
+    pnpm test
+
+## How it works
+
+Only the visible rows are in the DOM; a spacer div above and below fakes the
+scroll height. Sort and filter run in a Web Worker so scrolling never blocks.
+Row height is fixed to keep the offset math O(1).
+
+## Known gaps
+
+Variable row heights are stubbed, not done. Keyboard selection works; drag
+selection does not.`,
+      languages: [
+        { name: 'TypeScript', pct: 88 },
+        { name: 'CSS', pct: 12 },
+      ],
+      commits: 21,
+      lastCommit: '2026-07-13T09:40:00Z',
+      commitLog: [
+        { sha: 'a8d3f01', message: 'Move sort and filter into a worker', at: '2026-07-13T09:40:00Z' },
+        { sha: '3c7b210', message: 'Fixed-height row windowing', at: '2026-07-12T22:15:00Z' },
+        { sha: 'd90a4e6', message: 'Column menu and multi-sort', at: '2026-07-12T18:00:00Z' },
+        { sha: '5b1c7a9', message: 'Initial grid scaffold', at: '2026-07-12T14:30:00Z' },
+      ],
+      fileTree: [
+        'src/Grid.tsx',
+        'src/useWindowing.ts',
+        'src/Grid.test.tsx',
+        'src/worker/sort.ts',
+        'src/columns/ColumnMenu.tsx',
+        'index.html',
+        'package.json',
+        'README.md',
+      ],
+      health: 'live',
+    },
+    techStack: ['TypeScript', 'React', 'Vite', 'Vitest'],
+    scorecard: scoredCard([3, 4, 3, null, null]),
+    notes:
+      'Windowing is clean and the worker call is the right instinct. Want to see it run before scoring communication and product sense; no demo attached yet.',
+  },
+
+  // 8. Complete, needs-review.
+  {
+    id: 'sub_2e45',
+    candidate: {
+      name: 'Omar Haddad',
+      initials: 'OH',
+      links: {
+        linkedin: 'https://www.linkedin.com/in/omarhaddad',
+        github: 'https://github.com/ohaddad',
+        portfolio: 'https://omarhaddad.dev',
+        resume: 'https://omarhaddad.dev/omar-haddad-cv.pdf',
+      },
+    },
+    role: 'Full-Stack Engineer',
+    challengeTitle: 'URL shortener with analytics',
+    status: 'needs-review',
+    submittedAt: '2026-07-14T16:00:00Z',
+    timeSpentMinutes: 195,
+    approach: {
+      state: 'populated',
+      body: `Shortening a URL is trivial; the interesting parts are collision-free codes and click analytics that never slow the redirect. Short codes are base62 of a Snowflake-style id, so they are short, ordered, and unguessable without a lookup table.
+
+The redirect is a single indexed lookup that returns a 302 immediately. The click event is pushed onto a queue and written to ClickHouse asynchronously, so the hot path never waits on analytics.
+
+Per-link expiry and a creation rate limit are the next two things I would add; the seams are there.`,
+    },
+    demo: { state: 'populated', url: 'https://sho.rt-demo.app', health: 'live' },
+    gallery: { state: 'populated', images: ['link-list', 'analytics-view'] },
+    loom: {
+      state: 'populated',
+      url: 'https://www.loom.com/share/shortener-walkthrough',
+      health: 'live',
+    },
+    repo: {
+      state: 'populated',
+      url: 'https://github.com/ohaddad/shortlink',
+      readme: `# shortlink
+
+A URL shortener with click analytics that never slow the redirect.
+
+## Run
+
+    pnpm install
+    pnpm dev        # api + redirect on :8080
+
+## Design
+
+Short codes are base62 of a Snowflake-style id: short, ordered, unguessable.
+The redirect is a single indexed lookup; the click event is pushed onto a queue
+and written to ClickHouse asynchronously, so the 302 never waits on analytics.
+
+## Next
+
+Per-link expiry and a rate limit on creation.`,
+      languages: [
+        { name: 'TypeScript', pct: 69 },
+        { name: 'Go', pct: 20 },
+        { name: 'HTML', pct: 11 },
+      ],
+      commits: 27,
+      lastCommit: '2026-07-14T15:40:00Z',
+      commitLog: [
+        { sha: '7e2a1b9', message: 'Push click events onto the queue', at: '2026-07-14T15:40:00Z' },
+        { sha: 'f13c0d8', message: 'Base62 short-code generation', at: '2026-07-14T12:10:00Z' },
+        { sha: 'a67b902', message: 'Redirect via a single indexed lookup', at: '2026-07-14T09:00:00Z' },
+        { sha: '2d9f4c1', message: 'Initial commit', at: '2026-07-13T20:00:00Z' },
+      ],
+      fileTree: [
+        'src/api/create.ts',
+        'src/api/redirect.ts',
+        'src/codes/base62.ts',
+        'src/codes/base62.test.ts',
+        'ingest/consumer.go',
+        'package.json',
+        'go.mod',
+        'README.md',
+      ],
+      health: 'live',
+    },
+    techStack: ['TypeScript', 'Go', 'Redis', 'ClickHouse'],
+    scorecard: emptyScorecard(),
+  },
+
+  // 9. Decided — terminal (rejected). Read-only, scorecard locked and low.
+  {
+    id: 'sub_a1f9',
+    candidate: {
+      name: 'Grace Liu',
+      initials: 'GL',
+      links: {
+        linkedin: 'https://www.linkedin.com/in/graceliu',
+        github: 'https://github.com/gliu',
+        portfolio: 'https://graceliu.io',
+        resume: 'https://graceliu.io/grace-liu-resume.pdf',
+      },
+    },
+    role: 'Platform Engineer',
+    challengeTitle: 'Metrics aggregation pipeline',
+    status: 'rejected',
+    submittedAt: '2026-07-07T09:00:00Z',
+    timeSpentMinutes: 150,
+    decidedBy: 'You',
+    decidedAt: '2026-07-09T14:00:00Z',
+    approach: {
+      state: 'populated',
+      body: `I built an ingestion endpoint that buffers metrics in memory and flushes them to a time-series store on an interval. A Kafka topic sits in front for durability so a restart does not lose the last window.
+
+The aggregation is a straightforward rollup by tag and minute. It works for the happy path in the demo.
+
+Under sustained load the flush falls behind and the buffer starts dropping the oldest points, and I did not get to a backpressure story. It is documented in the README.`,
+    },
+    demo: { state: 'populated', url: 'https://metrics.graceliu.dev', health: 'live' },
+    gallery: { state: 'empty' },
+    loom: {
+      state: 'populated',
+      url: 'https://www.loom.com/share/metrics-tour',
+      health: 'live',
+    },
+    repo: {
+      state: 'populated',
+      url: 'https://github.com/gliu/metrics-pipe',
+      readme: `# metrics-pipe
+
+An ingestion endpoint that buffers metrics and flushes to a time-series store.
+
+## Run
+
+    pip install -r requirements.txt
+    python -m metrics.server
+
+## Design
+
+Metrics are buffered in memory and flushed to InfluxDB every five seconds or
+when the buffer fills. A Kafka topic sits in front for durability.
+
+## Known issues
+
+Under sustained load the flush falls behind and the buffer drops the oldest
+points. There is no backpressure yet.`,
+      languages: [
+        { name: 'Python', pct: 91 },
+        { name: 'Dockerfile', pct: 9 },
+      ],
+      commits: 14,
+      lastCommit: '2026-07-07T08:40:00Z',
+      commitLog: [
+        { sha: 'c4a7e20', message: 'Flush the buffer to InfluxDB on an interval', at: '2026-07-07T08:40:00Z' },
+        { sha: '90f3b1d', message: 'Kafka consumer for durability', at: '2026-07-06T22:00:00Z' },
+        { sha: 'a12c8f7', message: 'Ingestion endpoint scaffold', at: '2026-07-06T18:30:00Z' },
+        { sha: '3f0d99b', message: 'Initial commit', at: '2026-07-06T15:00:00Z' },
+      ],
+      fileTree: [
+        'metrics/server.py',
+        'metrics/buffer.py',
+        'metrics/flush.py',
+        'metrics/kafka_consumer.py',
+        'tests/test_buffer.py',
+        'requirements.txt',
+        'Dockerfile',
+        'README.md',
+      ],
+      health: 'live',
+    },
+    techStack: ['Python', 'InfluxDB', 'Kafka'],
+    scorecard: scoredCard([2, 2, 2, 3, 2]),
+    notes:
+      'Basics are there, but the aggregation drops points under load and there is no backpressure. Below the bar for a platform role. Rejected.',
+  },
+
+  // 10. Awaiting-candidate — strong entry parked on a rotted demo.
+  {
+    id: 'sub_f3c6',
+    candidate: {
+      name: 'Ben Carter',
+      initials: 'BC',
+      links: {
+        linkedin: 'https://www.linkedin.com/in/bencarter',
+        github: 'https://github.com/bcarter',
+        portfolio: 'https://bencarter.dev',
+        resume: 'https://bencarter.dev/ben-carter-cv.pdf',
+      },
+    },
+    role: 'Senior Backend Engineer',
+    challengeTitle: 'Distributed cache',
+    status: 'awaiting-candidate',
+    submittedAt: '2026-07-09T12:00:00Z',
+    timeSpentMinutes: 290,
+    approach: {
+      state: 'populated',
+      body: `Consistent hashing with virtual nodes is the spine: 128 virtual nodes per physical node, so adding a node moves about 1/N of the keys instead of reshuffling everything. That is the property that makes scaling boring, which is what you want.
+
+Writes are write-through with a short TTL, and a single-flight guard collapses concurrent misses for the same key so a cold key cannot stampede the origin. Node-to-node traffic is gRPC.
+
+I deployed a demo and recorded a walkthrough of the ring rebalancing when a node joins. The consistent-hashing tests are the part I am most proud of.`,
+    },
+    demo: { state: 'error', url: 'https://cache.bencarter.dev', health: 'unreachable' },
+    gallery: { state: 'populated', images: ['ring-visualizer', 'node-detail'] },
+    loom: {
+      state: 'populated',
+      url: 'https://www.loom.com/share/cache-tour',
+      health: 'live',
+    },
+    repo: {
+      state: 'populated',
+      url: 'https://github.com/bcarter/dcache',
+      readme: `# dcache
+
+A distributed cache with consistent hashing and write-through.
+
+## Run
+
+    make dev        # starts a 3-node ring locally
+    go test ./...
+
+## Design
+
+Consistent hashing with 128 virtual nodes per physical node, so adding a node
+moves about 1/N of the keys. Writes are write-through with a short TTL; a
+single-flight guard collapses concurrent misses for the same key so a cold key
+cannot stampede the origin. Node-to-node traffic is gRPC.
+
+## Trade-offs
+
+Eventual consistency across replicas. Rebalancing streams keys lazily on the
+next read rather than eagerly.`,
+      languages: [
+        { name: 'Go', pct: 82 },
+        { name: 'Shell', pct: 18 },
+      ],
+      commits: 41,
+      lastCommit: '2026-07-09T11:30:00Z',
+      commitLog: [
+        { sha: 'e91a3f7', message: 'Single-flight guard on cache miss', at: '2026-07-09T11:30:00Z' },
+        { sha: 'b40c2d8', message: 'Consistent hashing with virtual nodes', at: '2026-07-09T06:00:00Z' },
+        { sha: 'a7f1c93', message: 'Write-through with a short TTL', at: '2026-07-08T21:00:00Z' },
+        { sha: 'd23b8a0', message: 'gRPC node-to-node protocol', at: '2026-07-08T16:00:00Z' },
+        { sha: '5c9e017', message: 'Initial commit', at: '2026-07-08T12:00:00Z' },
+      ],
+      fileTree: [
+        'cmd/dcache/main.go',
+        'ring/consistent.go',
+        'ring/consistent_test.go',
+        'cache/writethrough.go',
+        'cache/singleflight.go',
+        'proto/node.proto',
+        'Makefile',
+        'go.mod',
+        'README.md',
+      ],
+      health: 'live',
+    },
+    techStack: ['Go', 'gRPC', 'Redis'],
+    scorecard: scoredCard([4, 3, 4, null, null]),
+    requested: 'a live demo',
+    notes:
+      'Consistent-hashing implementation is the real thing. Demo spun down; asked for a redeploy before finishing the score.',
   },
 ];

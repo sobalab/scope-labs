@@ -1,10 +1,19 @@
-import type { Submission } from '../data/submissions';
+import { useState } from 'react';
+import type { Lifecycle, Submission } from '../data/submissions';
 import { rolePosting } from '../data/submissions';
 import { StatusBadge } from './primitives/StatusBadge';
 import { ThemeToggle } from './ThemeToggle';
 import { ReviewerMenu } from './ReviewerMenu';
 import { lifecycleMeta } from '../lib/lifecycle';
 import { timeSince } from '../lib/format';
+
+const FILTER_ORDER: Lifecycle[] = [
+  'needs-review',
+  'in-review',
+  'awaiting-candidate',
+  'advanced',
+  'rejected',
+];
 
 interface QueueTableProps {
   submissions: Submission[];
@@ -23,10 +32,18 @@ export function QueueTable({
   onToggleTheme,
 }: QueueTableProps) {
   const open = submissions.filter((s) => !lifecycleMeta[s.status].terminal).length;
+  const [filter, setFilter] = useState<Lifecycle | 'all'>('all');
+
+  const count = (status: Lifecycle) =>
+    submissions.filter((s) => s.status === status).length;
+  const present = FILTER_ORDER.filter((st) => count(st) > 0);
+  const rows =
+    filter === 'all' ? submissions : submissions.filter((s) => s.status === filter);
+
   return (
     <div className="app-bg min-h-screen">
       <div className="mx-auto max-w-[1240px] px-8 py-12">
-        <header className="mb-8 flex items-start justify-between gap-4">
+        <header className="mb-6 flex items-start justify-between gap-4">
           <div>
             <h1 className="text-[30px] font-medium leading-[1.05] tracking-[-0.015em] text-ink">
               {rolePosting}
@@ -41,6 +58,28 @@ export function QueueTable({
             <ThemeToggle theme={theme} onToggle={onToggleTheme} />
           </div>
         </header>
+
+        <div
+          className="mb-4 flex flex-wrap gap-2"
+          role="group"
+          aria-label="Filter by status"
+        >
+          <FilterPill
+            label="All"
+            n={submissions.length}
+            active={filter === 'all'}
+            onClick={() => setFilter('all')}
+          />
+          {present.map((st) => (
+            <FilterPill
+              key={st}
+              label={lifecycleMeta[st].label}
+              n={count(st)}
+              active={filter === st}
+              onClick={() => setFilter(st)}
+            />
+          ))}
+        </div>
 
         <div className="overflow-x-auto rounded-2xl border border-border bg-surface shadow-[var(--shadow-card)]">
         <table className="w-full min-w-[640px] table-fixed border-collapse text-left">
@@ -59,7 +98,7 @@ export function QueueTable({
             </tr>
           </thead>
           <tbody>
-            {submissions.map((s) => {
+            {rows.map((s) => {
               const meta = lifecycleMeta[s.status];
               return (
                 <tr
@@ -103,5 +142,34 @@ export function QueueTable({
         </div>
       </div>
     </div>
+  );
+}
+
+function FilterPill({
+  label,
+  n,
+  active,
+  onClick,
+}: {
+  label: string;
+  n: number;
+  active: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={active}
+      className={[
+        'inline-flex items-center gap-[7px] rounded-full border px-[14px] py-[7px] text-[13px] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-line',
+        active
+          ? 'border-ink bg-ink text-[var(--surface)]'
+          : 'border-border-strong bg-surface text-muted hover:text-ink',
+      ].join(' ')}
+    >
+      {label}
+      <span className={active ? 'text-white/60' : 'text-faint'}>{n}</span>
+    </button>
   );
 }

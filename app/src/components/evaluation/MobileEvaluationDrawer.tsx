@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { Submission } from '../../data/submissions';
-import { EvaluationPanel, type EvaluationHandlers } from './EvaluationPanel';
+import { EvaluationPanel, type EvaluationHandlers, type SaveState } from './EvaluationPanel';
 import { StatusBadge } from '../primitives/StatusBadge';
 import { Button } from '../primitives/Button';
 import { lifecycleMeta, isTerminal } from '../../lib/lifecycle';

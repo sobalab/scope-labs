@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   submissions as fixtures,
+  lastReviewedSeed,
   type BlockState,
   type Lifecycle,
   type Submission,
@@ -113,6 +114,18 @@ export default function App() {
   const [sim, setSim] = useState<SimState>(emptySim);
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [toast, setToast] = useState<string | null>(null);
+  const [lastOpened, setLastOpened] = useState<Record<string, string>>(
+    () => ({ ...lastReviewedSeed }),
+  );
+  const [saveState, setSaveState] = useState<'idle' | 'saving' | 'saved'>('idle');
+  const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Scores and notes persist synchronously; this just flashes the reassurance.
+  const flashSaved = () => {
+    setSaveState('saving');
+    if (saveTimer.current) clearTimeout(saveTimer.current);
+    saveTimer.current = setTimeout(() => setSaveState('saved'), 550);
+  };
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -155,16 +168,23 @@ export default function App() {
     setActiveId(id);
     setSim(emptySim);
     setView('showcase');
+    setSaveState('idle');
+    setLastOpened((prev) => ({ ...prev, [id]: NOW.toISOString() }));
   };
 
   const handlers: EvaluationHandlers = {
-    onScore: (criterion, value) =>
+    onScore: (criterion, value) => {
       patchActive({
         scorecard: store[activeId].scorecard.map((s) =>
           s.criterion === criterion ? { ...s, score: value } : s,
         ),
-      }),
-    onNotes: (value) => patchActive({ notes: value }),
+      });
+      flashSaved();
+    },
+    onNotes: (value) => {
+      patchActive({ notes: value });
+      flashSaved();
+    },
     onAdvance: (email: boolean) => {
       patchActive({
         status: 'advanced',
@@ -221,6 +241,7 @@ export default function App() {
           onOpen={openSubmission}
           theme={theme}
           onToggleTheme={toggleTheme}
+          lastOpened={lastOpened}
         />
       ) : (
         <>
@@ -231,6 +252,8 @@ export default function App() {
                 onBack={() => setView('queue')}
                 theme={theme}
                 onToggleTheme={toggleTheme}
+                submissions={orderedSubmissions}
+                onSelect={openSubmission}
               />
             }
             evidence={
@@ -241,12 +264,20 @@ export default function App() {
               />
             }
             evaluation={
-              <EvaluationPanel submission={effective} handlers={handlers} />
+              <EvaluationPanel
+                submission={effective}
+                handlers={handlers}
+                saveState={saveState}
+              />
             }
           />
           {/* Bottom padding so the mobile trigger bar never covers content. */}
           <div className="h-[72px] lg:hidden" />
-          <MobileEvaluationDrawer submission={effective} handlers={handlers} />
+          <MobileEvaluationDrawer
+            submission={effective}
+            handlers={handlers}
+            saveState={saveState}
+          />
         </>
       )}
 

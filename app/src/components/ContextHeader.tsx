@@ -3,6 +3,7 @@ import { suggestedTimeMinutes } from '../data/submissions';
 import { StatusBadge } from './primitives/StatusBadge';
 import { ProfileLinks } from './ProfileLinks';
 import { ThemeToggle } from './ThemeToggle';
+import { CandidateNav } from './CandidateNav';
 import { lifecycleMeta } from '../lib/lifecycle';
 import { timeSince, formatDateTime, formatDuration } from '../lib/format';
 
@@ -18,6 +19,8 @@ interface ContextHeaderProps {
   onBack?: () => void;
   theme: 'light' | 'dark';
   onToggleTheme: () => void;
+  submissions: Submission[];
+  onSelect: (id: string) => void;
 }
 
 // Full-width frosted header spanning both columns — the top of the split
@@ -29,15 +32,19 @@ export function ContextHeader({
   onBack,
   theme,
   onToggleTheme,
+  submissions,
+  onSelect,
 }: ContextHeaderProps) {
   const meta = lifecycleMeta[submission.status];
   return (
     <header
-      className="border-b border-border px-8 pb-6 pt-6"
+      className="relative z-30 rounded-b-3xl border border-t-0 px-8 pb-6 pt-6"
       style={{
         background: 'var(--glass-light-bg)',
-        backdropFilter: 'var(--blur-soft)',
-        WebkitBackdropFilter: 'var(--blur-soft)',
+        backdropFilter: 'var(--blur-strong)',
+        WebkitBackdropFilter: 'var(--blur-strong)',
+        borderColor: 'var(--glass-light-border)',
+        boxShadow: 'var(--shadow-glass)',
       }}
     >
       <div className="mb-5 flex items-center justify-between gap-4">
@@ -55,7 +62,14 @@ export function ContextHeader({
         ) : (
           <span />
         )}
-        <ThemeToggle theme={theme} onToggle={onToggleTheme} />
+        <div className="flex items-center gap-3">
+          <CandidateNav
+            submissions={submissions}
+            activeId={submission.id}
+            onSelect={onSelect}
+          />
+          <ThemeToggle theme={theme} onToggle={onToggleTheme} />
+        </div>
       </div>
       <div className="flex flex-wrap items-start justify-between gap-6">
         <div className="flex items-start gap-4">
