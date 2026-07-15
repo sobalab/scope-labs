@@ -1,18 +1,35 @@
 import type { Submission } from '../data/submissions';
+import { suggestedTimeMinutes } from '../data/submissions';
 import { StatusBadge } from './primitives/StatusBadge';
+import { ProfileLinks } from './ProfileLinks';
+import { ThemeToggle } from './ThemeToggle';
 import { lifecycleMeta } from '../lib/lifecycle';
-import { timeSince, formatDateTime } from '../lib/format';
+import { timeSince, formatDateTime, formatDuration } from '../lib/format';
+
+const ClockIcon = () => (
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="text-faint">
+    <circle cx="12" cy="12" r="9" />
+    <path d="M12 7v5l3 2" />
+  </svg>
+);
 
 interface ContextHeaderProps {
   submission: Submission;
   onBack?: () => void;
+  theme: 'light' | 'dark';
+  onToggleTheme: () => void;
 }
 
 // Full-width frosted header spanning both columns — the top of the split
 // primitive. Floats over the gradient ground, so it takes a light frost with a
 // hairline underline (system treatment for glass chrome). Identity leads; the
 // status and timestamps sit right, timestamps in mono as data readouts.
-export function ContextHeader({ submission, onBack }: ContextHeaderProps) {
+export function ContextHeader({
+  submission,
+  onBack,
+  theme,
+  onToggleTheme,
+}: ContextHeaderProps) {
   const meta = lifecycleMeta[submission.status];
   return (
     <header
@@ -23,20 +40,25 @@ export function ContextHeader({ submission, onBack }: ContextHeaderProps) {
         WebkitBackdropFilter: 'var(--blur-soft)',
       }}
     >
-      {onBack && (
-        <button
-          type="button"
-          onClick={onBack}
-          className="mb-5 inline-flex items-center gap-2 text-[12px] font-medium text-muted transition-colors hover:text-ink"
-        >
-          <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <path d="M10 3L5 8l5 5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-          Review queue
-        </button>
-      )}
+      <div className="mb-5 flex items-center justify-between gap-4">
+        {onBack ? (
+          <button
+            type="button"
+            onClick={onBack}
+            className="inline-flex items-center gap-2 text-[12px] font-medium text-muted transition-colors hover:text-ink"
+          >
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M10 3L5 8l5 5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            Review queue
+          </button>
+        ) : (
+          <span />
+        )}
+        <ThemeToggle theme={theme} onToggle={onToggleTheme} />
+      </div>
       <div className="flex flex-wrap items-start justify-between gap-6">
-        <div className="flex items-center gap-4">
+        <div className="flex items-start gap-4">
           <div
             className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl font-sans text-[15px] font-normal text-white"
             style={{
@@ -54,10 +76,33 @@ export function ContextHeader({ submission, onBack }: ContextHeaderProps) {
             <p className="pt-[3px] text-[13.5px] leading-[1.35] text-muted">
               {submission.role} · {submission.challengeTitle}
             </p>
+            <div className="pt-4">
+              <ProfileLinks
+                name={submission.candidate.name}
+                links={submission.candidate.links}
+              />
+            </div>
           </div>
         </div>
         <div className="flex flex-col items-start gap-[7px] sm:items-end">
           <StatusBadge label={meta.label} tone={meta.tone} />
+          <div className="flex items-center gap-[6px] sm:justify-end">
+            <ClockIcon />
+            <span className="text-[13px] font-medium text-ink">
+              {formatDuration(submission.timeSpentMinutes)}
+            </span>
+            <span className="text-[12px] text-muted">worked</span>
+            <span
+              className={
+                submission.timeSpentMinutes > suggestedTimeMinutes
+                  ? 'text-[11px] text-warn'
+                  : 'text-[11px] text-faint'
+              }
+            >
+              {submission.timeSpentMinutes > suggestedTimeMinutes ? 'over' : 'within'}{' '}
+              the {formatDuration(suggestedTimeMinutes)} guide
+            </span>
+          </div>
           <p className="font-sans text-[11px] text-muted">
             submitted {timeSince(submission.submittedAt)}
           </p>

@@ -1,5 +1,6 @@
 import type { RubricScore } from '../../data/submissions';
 import { RatingControl } from '../primitives/RatingControl';
+import { rubricAnchors } from '../../lib/lifecycle';
 
 interface ScorecardProps {
   scores: RubricScore[];
@@ -8,8 +9,8 @@ interface ScorecardProps {
 }
 
 // Repeats a segmented scale per rubric criterion. The rubric is fixed across all
-// submissions on purpose: consistent criteria fight the halo effect. The scale
-// shows the number in each cell, so no separate readout is needed.
+// submissions on purpose: consistent criteria fight the halo effect. Hovering or
+// focusing a score shows what it means for that criterion.
 export function Scorecard({ scores, locked, onScore }: ScorecardProps) {
   const scored = scores.filter((s) => s.score != null).length;
   return (
@@ -17,7 +18,7 @@ export function Scorecard({ scores, locked, onScore }: ScorecardProps) {
       <div className="flex items-baseline justify-between gap-3">
         <span className="eyebrow">Scorecard</span>
         <span className="font-sans text-[10.5px] text-faint">
-          {scored}/{scores.length} · 1 = weak · 4 = excellent
+          {scored}/{scores.length} scored · hover a score
         </span>
       </div>
 
@@ -33,6 +34,7 @@ export function Scorecard({ scores, locked, onScore }: ScorecardProps) {
                 value={s.score}
                 max={s.max}
                 locked={locked}
+                descriptions={rubricAnchors[s.criterion]}
                 onChange={(v) => onScore(s.criterion, v)}
               />
             </div>

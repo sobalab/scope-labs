@@ -11,7 +11,7 @@ export interface EvaluationHandlers {
   onNotes: (value: string) => void;
   onAdvance: () => void;
   onReject: () => void;
-  onRequestMore: () => void;
+  onRequestMore: (summary: string) => void;
   onResume: () => void;
 }
 
@@ -69,9 +69,7 @@ export function EvaluationPanel({
         onChange={handlers.onNotes}
       />
       <DecisionActions
-        status={submission.status}
-        decidedBy={submission.decidedBy}
-        decidedAt={submission.decidedAt}
+        submission={submission}
         onAdvance={handlers.onAdvance}
         onReject={handlers.onReject}
         onRequestMore={handlers.onRequestMore}

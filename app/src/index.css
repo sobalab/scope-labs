@@ -44,6 +44,7 @@
   --paper: #e7eaee;
   --surface: #ffffff;
   --surface-sunk: #eef1f4;
+  --pill-neutral: #dbe0e7; /* a step darker than sunk, so neutral pills read */
 
   /* text — cool neutrals, AA-tuned */
   --ink: #1a1d21;
@@ -95,6 +96,7 @@
   --paper: #121417;
   --surface: #1b1e22;
   --surface-sunk: #16191d;
+  --pill-neutral: #2b3138;
 
   --ink: #eef1f4;
   --body: #c3c9d1;
@@ -136,6 +138,7 @@
   --color-paper: var(--paper);
   --color-surface: var(--surface);
   --color-surface-sunk: var(--surface-sunk);
+  --color-pill-neutral: var(--pill-neutral);
 
   --color-ink: var(--ink);
   --color-body: var(--body);

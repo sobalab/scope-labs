@@ -55,6 +55,68 @@ const GitHubMark = () => (
   </svg>
 );
 
+const ArrowIcon = () => (
+  <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+    <path d="M6 3h7v7M13 3L4 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
+// Recent commit messages, each a link out to that commit on the host. We surface
+// the repo's signal (what changed, when) rather than embedding a diff viewer:
+// engineers read the actual diff in the repo, one click away.
+function CommitList({
+  commits,
+  repoUrl,
+  total,
+}: {
+  commits: { sha: string; message: string; at: string }[];
+  repoUrl?: string;
+  total?: number;
+}) {
+  return (
+    <div className="space-y-2">
+      <div className="flex items-baseline justify-between gap-3">
+        <span className="eyebrow">Recent commits</span>
+        {repoUrl && (
+          <a
+            href={`${repoUrl}/commits`}
+            target="_blank"
+            rel="noreferrer"
+            aria-label="All commits on the repository, opens in a new tab"
+            className="rounded text-[12px] font-medium text-accent-text transition-colors hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-line"
+          >
+            {total != null ? `All ${total}` : 'All commits'}
+          </a>
+        )}
+      </div>
+      <ul className="space-y-[2px]">
+        {commits.map((c) => (
+          <li key={c.sha}>
+            <a
+              href={repoUrl ? `${repoUrl}/commit/${c.sha}` : undefined}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={`Commit ${c.sha}: ${c.message}, opens in a new tab`}
+              className="group -mx-2 flex items-center gap-3 rounded-lg px-2 py-[7px] transition-colors hover:bg-surface-sunk focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent-line"
+            >
+              <span className="min-w-0 flex-1 truncate text-[13px] text-body transition-colors group-hover:text-ink">
+                {c.message}
+              </span>
+              <span className="shrink-0 text-[11px] text-faint">{c.sha}</span>
+              <span className="hidden shrink-0 text-[11px] text-faint sm:inline">
+                {timeSince(c.at)}
+              </span>
+              <span className="shrink-0 text-faint opacity-0 transition-opacity group-hover:opacity-100">
+                <ArrowIcon />
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 export function RepoSummary({ repo, onRequestReadme, onRequestAccess }: RepoSummaryProps) {
   if (repo.state === 'loading') {
     return (
@@ -146,6 +208,14 @@ export function RepoSummary({ repo, onRequestReadme, onRequestAccess }: RepoSumm
 
         {repo.languages && repo.languages.length > 0 && (
           <LanguageBar languages={repo.languages} />
+        )}
+
+        {repo.commitLog && repo.commitLog.length > 0 && (
+          <CommitList
+            commits={repo.commitLog}
+            repoUrl={repo.url}
+            total={repo.commits}
+          />
         )}
 
         {repo.readme && (

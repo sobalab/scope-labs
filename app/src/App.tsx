@@ -85,6 +85,11 @@ function fillBlock(
         ],
         commits: (current as Submission['repo']).commits ?? 24,
         lastCommit: (current as Submission['repo']).lastCommit ?? NOW.toISOString(),
+        commitLog: (current as Submission['repo']).commitLog ?? [
+          { sha: 'a1c4f90', message: 'Wire up the core flow end to end', at: NOW.toISOString() },
+          { sha: '7d22e0b', message: 'Add tests around the tricky path', at: NOW.toISOString() },
+          { sha: '3f88a1c', message: 'Initial commit', at: NOW.toISOString() },
+        ],
         health: live,
       };
   }
@@ -171,36 +176,43 @@ export default function App() {
       setSim((s) => ({ ...s, lifecycle: 'auto' }));
       setToast(`Rejected ${store[activeId].candidate.name}.`);
     },
-    onRequestMore: () => {
-      patchActive({ status: 'awaiting-candidate' });
+    onRequestMore: (summary: string) => {
+      patchActive({ status: 'awaiting-candidate', requested: summary });
       setSim((s) => ({ ...s, lifecycle: 'auto' }));
-      setToast('Parked and requested more from the candidate.');
+      setToast(`Asked ${store[activeId].candidate.name.split(' ')[0]} for ${summary}.`);
     },
     onResume: () => {
-      patchActive({ status: 'in-review' });
+      patchActive({ status: 'in-review', requested: undefined });
       setSim((s) => ({ ...s, lifecycle: 'auto' }));
-      setToast('Returned to review.');
+      setToast('Resumed. Moved back to in review.');
     },
   };
 
   const requestArtifact = (what: string) => {
     if (!isTerminal(effective.status)) {
-      patchActive({ status: 'awaiting-candidate' });
+      patchActive({ status: 'awaiting-candidate', requested: what });
     }
     setToast(`Requested ${what} from the candidate.`);
   };
 
   const bulkReRequest = () => {
     if (!isTerminal(effective.status)) {
-      patchActive({ status: 'awaiting-candidate' });
+      patchActive({ status: 'awaiting-candidate', requested: 'working links for every broken artifact' });
     }
     setToast('Requested fresh links for every broken artifact.');
   };
 
+  const toggleTheme = () => setTheme((t) => (t === 'light' ? 'dark' : 'light'));
+
   return (
     <>
       {view === 'queue' ? (
-        <QueueTable submissions={orderedSubmissions} onOpen={openSubmission} />
+        <QueueTable
+          submissions={orderedSubmissions}
+          onOpen={openSubmission}
+          theme={theme}
+          onToggleTheme={toggleTheme}
+        />
       ) : (
         <>
           <PageShell
@@ -208,6 +220,8 @@ export default function App() {
               <ContextHeader
                 submission={effective}
                 onBack={() => setView('queue')}
+                theme={theme}
+                onToggleTheme={toggleTheme}
               />
             }
             evidence={
@@ -240,7 +254,7 @@ export default function App() {
         }
         onReset={() => setSim(emptySim)}
         theme={theme}
-        onToggleTheme={() => setTheme((t) => (t === 'light' ? 'dark' : 'light'))}
+        onToggleTheme={toggleTheme}
       />
 
       <Toast message={toast} onDismiss={() => setToast(null)} />

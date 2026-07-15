@@ -1,28 +1,41 @@
 import type { Submission } from '../data/submissions';
+import { rolePosting } from '../data/submissions';
 import { StatusBadge } from './primitives/StatusBadge';
+import { ThemeToggle } from './ThemeToggle';
 import { lifecycleMeta } from '../lib/lifecycle';
 import { timeSince } from '../lib/format';
 
 interface QueueTableProps {
   submissions: Submission[];
   onOpen: (id: string) => void;
+  theme: 'light' | 'dark';
+  onToggleTheme: () => void;
 }
 
 // A table is right for the queue (rows to scan) and deliberately wrong for the
 // individual submission (evidence to read). This is thin, by design: it exists
 // to give the showcase an entry context, not to be a second product.
-export function QueueTable({ submissions, onOpen }: QueueTableProps) {
+export function QueueTable({
+  submissions,
+  onOpen,
+  theme,
+  onToggleTheme,
+}: QueueTableProps) {
   const open = submissions.filter((s) => !lifecycleMeta[s.status].terminal).length;
   return (
     <div className="app-bg min-h-screen">
       <div className="mx-auto max-w-[1240px] px-8 py-12">
-        <header className="mb-8">
-          <h1 className="text-[26px] font-medium tracking-[-0.01em] text-ink">
-            Review queue
-          </h1>
-          <p className="pt-1 text-[14px] text-muted">
-            {open} open, {submissions.length} total. Pick one to evaluate.
-          </p>
+        <header className="mb-8 flex items-start justify-between gap-4">
+          <div>
+            <h1 className="text-[30px] font-medium leading-[1.05] tracking-[-0.015em] text-ink">
+              {rolePosting}
+            </h1>
+            <p className="pt-2 text-[14px] text-muted">
+              Review queue. {submissions.length} candidates, {open} still open.
+              Pick one to evaluate.
+            </p>
+          </div>
+          <ThemeToggle theme={theme} onToggle={onToggleTheme} />
         </header>
 
         <div className="overflow-x-auto rounded-2xl border border-border bg-surface shadow-[var(--shadow-card)]">

@@ -3,7 +3,7 @@ import type { Tone } from '../../lib/lifecycle';
 // Mono, uppercase status pill — the system's Badge. Near-monochrome; tone shifts
 // the fill, never loud. "ink" is the one solid, decisive pill (advanced).
 const toneClasses: Record<Tone, string> = {
-  neutral: 'bg-surface-sunk text-muted',
+  neutral: 'bg-pill-neutral text-muted',
   accent: 'bg-accent-soft text-accent-text',
   ink: 'bg-ink text-[var(--surface)]',
   ok: 'bg-ok-soft text-ok',

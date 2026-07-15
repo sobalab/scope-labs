@@ -81,7 +81,7 @@ export function StateSwitcher(props: StateSwitcherProps) {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="fixed right-4 top-4 z-40 flex items-center gap-2 rounded-full border px-4 py-2 text-[12px] font-medium text-muted transition-colors hover:text-ink"
+        className="fixed bottom-[84px] right-4 z-40 flex items-center gap-2 rounded-full border px-4 py-2 text-[12px] font-medium text-muted transition-colors hover:text-ink lg:bottom-4"
         style={{
           background: 'var(--glass-light-bg)',
           borderColor: 'var(--glass-light-border)',
@@ -98,7 +98,7 @@ export function StateSwitcher(props: StateSwitcherProps) {
 
   return (
     <div
-      className="fixed right-4 top-4 z-40 w-[288px] rounded-2xl border p-4"
+      className="scroll-region fixed bottom-[84px] right-4 z-40 max-h-[80vh] w-[288px] overflow-y-auto rounded-2xl border p-4 lg:bottom-4"
       style={{
         background: 'var(--glass-light-bg)',
         borderColor: 'var(--glass-light-border)',

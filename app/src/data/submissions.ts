@@ -18,13 +18,23 @@ export interface RubricScore {
   max: number;
 }
 
+// The candidate's own profiles, distinct from the submission's repo. Each is
+// optional so a profile with a missing link degrades gracefully.
+export interface CandidateLinks {
+  linkedin?: string;
+  github?: string;
+  portfolio?: string;
+  resume?: string;
+}
+
 export interface Submission {
   id: string;
-  candidate: { name: string; initials: string };
+  candidate: { name: string; initials: string; links: CandidateLinks };
   role: string;
   challengeTitle: string;
   status: Lifecycle;
   submittedAt: string; // ISO
+  timeSpentMinutes: number; // how long the candidate worked on the take-home
   decidedBy?: string; // set only for terminal states
   decidedAt?: string;
   approach: { state: BlockState; body?: string };
@@ -38,11 +48,15 @@ export interface Submission {
     languages?: { name: string; pct: number }[];
     commits?: number;
     lastCommit?: string;
+    // Recent commits, newest first. Each links out to the commit on the host.
+    commitLog?: { sha: string; message: string; at: string }[];
     health?: LinkHealth;
   };
   techStack: string[];
   scorecard: RubricScore[];
   notes?: string;
+  // What the reviewer last asked the candidate for, shown while awaiting them.
+  requested?: string;
 }
 
 // The fixed rubric. Five criteria, each scored 1 to 4. Keeping the set fixed
@@ -54,6 +68,14 @@ export const RUBRIC_CRITERIA = [
   'Communication',
   'Product sense',
 ] as const;
+
+// The open req these candidates all applied to. The per-candidate `role` field
+// is each applicant's current title; this is the role being hired for.
+export const rolePosting = 'Senior Software Engineer';
+
+// The take-home's suggested time budget. Shown alongside each candidate's actual
+// time worked so the reviewer can read effort against the guide, transparently.
+export const suggestedTimeMinutes = 240; // 4 hours
 
 const emptyScorecard = (): RubricScore[] =>
   RUBRIC_CRITERIA.map((criterion) => ({ criterion, score: null, max: 4 }));
@@ -104,11 +126,21 @@ export const submissions: Submission[] = [
   // 1. Complete — the strong, fully-evidenced submission. Everything populated.
   {
     id: 'sub_ea19',
-    candidate: { name: 'Mara Osei', initials: 'MO' },
+    candidate: {
+      name: 'Mara Osei',
+      initials: 'MO',
+      links: {
+        linkedin: 'https://www.linkedin.com/in/maraosei',
+        github: 'https://github.com/mosei',
+        portfolio: 'https://maraosei.dev',
+        resume: 'https://maraosei.dev/mara-osei-cv.pdf',
+      },
+    },
     role: 'Senior Full-Stack Engineer',
     challengeTitle: 'Realtime ledger service',
     status: 'in-review',
     submittedAt: '2026-07-14T09:12:00Z',
+    timeSpentMinutes: 280,
     approach: {
       state: 'populated',
       body: `I read the prompt as an integrity problem first and a features problem second. A ledger that loses or double-counts a transaction is worthless, so I built the write path as a single command handler that validates, appends to an event log, and only then acknowledges.
@@ -150,6 +182,13 @@ If I had another day I would move the projection cache out of process and add ba
       ],
       commits: 47,
       lastCommit: '2026-07-14T08:40:00Z',
+      commitLog: [
+        { sha: '7f3a2b1', message: 'Add reconciliation endpoint with replay-after-miss test', at: '2026-07-14T08:40:00Z' },
+        { sha: 'c41d9e0', message: 'Fold balances from the event stream, cache per account', at: '2026-07-14T05:12:00Z' },
+        { sha: 'a90b7c4', message: 'Validate commands before append, ack only after', at: '2026-07-13T21:38:00Z' },
+        { sha: 'e28f150', message: 'Scaffold event log and projection layer', at: '2026-07-13T17:02:00Z' },
+        { sha: '1b6d33a', message: 'Initial commit', at: '2026-07-13T14:20:00Z' },
+      ],
       health: 'live',
     },
     techStack: ['TypeScript', 'Fastify', 'PostgreSQL', 'React', 'Vitest', 'Docker'],
@@ -161,11 +200,21 @@ If I had another day I would move the projection cache out of process and add ba
   // 2. Bare — repo link only. No description, no media. Degrades to the README.
   {
     id: 'sub_7c3d',
-    candidate: { name: 'Devin Park', initials: 'DP' },
+    candidate: {
+      name: 'Devin Park',
+      initials: 'DP',
+      links: {
+        linkedin: 'https://www.linkedin.com/in/devinpark',
+        github: 'https://github.com/dpark',
+        portfolio: 'https://devpark.io',
+        resume: 'https://devpark.io/resume.pdf',
+      },
+    },
     role: 'Platform Engineer',
     challengeTitle: 'File sync daemon',
     status: 'needs-review',
     submittedAt: '2026-07-15T02:47:00Z',
+    timeSpentMinutes: 130,
     approach: {
       state: 'empty',
     },
@@ -188,6 +237,12 @@ If I had another day I would move the projection cache out of process and add ba
       ],
       commits: 9,
       lastCommit: '2026-07-15T01:55:00Z',
+      commitLog: [
+        { sha: '9c2e77b', message: 'Handle rename events in the sync loop', at: '2026-07-15T01:55:00Z' },
+        { sha: '4a0f1d8', message: 'Debounce fsnotify events, batch writes', at: '2026-07-15T00:31:00Z' },
+        { sha: 'd7b3a90', message: 'Add SQLite index for path lookups', at: '2026-07-14T22:10:00Z' },
+        { sha: '2f9c845', message: 'Initial sync daemon', at: '2026-07-14T19:44:00Z' },
+      ],
       health: 'live',
     },
     techStack: ['Go', 'SQLite', 'fsnotify'],
@@ -198,11 +253,21 @@ If I had another day I would move the projection cache out of process and add ba
   //    repo went private. Every external artifact is in error at once.
   {
     id: 'sub_b204',
-    candidate: { name: 'Priya Nair', initials: 'PN' },
+    candidate: {
+      name: 'Priya Nair',
+      initials: 'PN',
+      links: {
+        linkedin: 'https://www.linkedin.com/in/priyanair',
+        github: 'https://github.com/pnair',
+        portfolio: 'https://priyanair.design',
+        resume: 'https://priyanair.design/priya-nair-cv.pdf',
+      },
+    },
     role: 'Senior Frontend Engineer',
     challengeTitle: 'Collaborative whiteboard',
     status: 'needs-review',
     submittedAt: '2026-06-24T15:30:00Z',
+    timeSpentMinutes: 305,
     approach: {
       state: 'populated',
       body: `The hard part of a shared whiteboard is not drawing, it is convergence: two people editing the same region should end up seeing the same thing without a server round-trip on every stroke.
@@ -239,11 +304,21 @@ I deployed a live demo and recorded a walkthrough showing two tabs converging af
   //    Approach and repo are solid; the demo link rotted and was re-requested.
   {
     id: 'sub_9f61',
-    candidate: { name: 'Tomas Reyes', initials: 'TR' },
+    candidate: {
+      name: 'Tomas Reyes',
+      initials: 'TR',
+      links: {
+        linkedin: 'https://www.linkedin.com/in/tomasreyes',
+        github: 'https://github.com/treyes',
+        portfolio: 'https://reyes.dev',
+        resume: 'https://reyes.dev/tomas-reyes-resume.pdf',
+      },
+    },
     role: 'Full-Stack Engineer',
     challengeTitle: 'Feature-flag service',
     status: 'awaiting-candidate',
     submittedAt: '2026-07-11T18:05:00Z',
+    timeSpentMinutes: 230,
     approach: {
       state: 'populated',
       body: `I treated flag evaluation as the hot path and everything else as cold. Evaluation is a pure function over a flag config and a context, with no I/O, so it is trivially testable and fast enough to run inline.
@@ -286,10 +361,17 @@ documented in ISSUES.md, not fixed.`,
       ],
       commits: 31,
       lastCommit: '2026-07-11T17:20:00Z',
+      commitLog: [
+        { sha: 'b83c1a2', message: 'Document percentage-rollout edge case in ISSUES.md', at: '2026-07-11T17:20:00Z' },
+        { sha: '5e6f209', message: 'Add local cache with pub/sub invalidation', at: '2026-07-11T14:03:00Z' },
+        { sha: 'a17d4c8', message: 'Pure-function flag evaluation with tests', at: '2026-07-11T10:47:00Z' },
+        { sha: '3c90b71', message: 'Initial commit', at: '2026-07-10T20:15:00Z' },
+      ],
       health: 'live',
     },
     techStack: ['TypeScript', 'Go', 'Redis', 'gRPC'],
     scorecard: scoredCard([3, 3, 3, null, null]),
+    requested: 'a live demo',
     notes:
       'Requested a working demo on Jul 12, the deployed instance was already down. Loom and repo are enough to keep evaluating. Parked until the redeploy lands.',
   },
@@ -297,11 +379,21 @@ documented in ISSUES.md, not fixed.`,
   // 5. Decided — terminal (advanced). Read-only: scorecard locked, decision stamped.
   {
     id: 'sub_3a88',
-    candidate: { name: 'Yuki Tanaka', initials: 'YT' },
+    candidate: {
+      name: 'Yuki Tanaka',
+      initials: 'YT',
+      links: {
+        linkedin: 'https://www.linkedin.com/in/yukitanaka',
+        github: 'https://github.com/ytanaka',
+        portfolio: 'https://yukitanaka.engineering',
+        resume: 'https://yukitanaka.engineering/cv.pdf',
+      },
+    },
     role: 'Backend Engineer',
     challengeTitle: 'Rate limiter as a service',
     status: 'advanced',
     submittedAt: '2026-07-08T11:00:00Z',
+    timeSpentMinutes: 255,
     decidedBy: 'You',
     decidedAt: '2026-07-10T16:22:00Z',
     approach: {
@@ -340,6 +432,13 @@ Property tests assert the rate ceiling holds under a window. Benchmarks below.`,
       ],
       commits: 38,
       lastCommit: '2026-07-08T10:15:00Z',
+      commitLog: [
+        { sha: 'f2a5c30', message: 'Add sliding-window-counter algorithm and property test', at: '2026-07-08T10:15:00Z' },
+        { sha: '6b1e9d7', message: 'Atomic check-and-decrement via Redis Lua', at: '2026-07-08T06:52:00Z' },
+        { sha: 'c9083af', message: 'Token bucket behind the limiter interface', at: '2026-07-07T23:19:00Z' },
+        { sha: '0d47e21', message: 'Benchmarks for all three algorithms', at: '2026-07-07T18:40:00Z' },
+        { sha: '8a2f66c', message: 'Initial commit', at: '2026-07-07T15:05:00Z' },
+      ],
       health: 'live',
     },
     techStack: ['Go', 'Redis', 'Lua', 'Prometheus'],
