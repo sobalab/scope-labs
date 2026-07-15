@@ -1,0 +1,157 @@
+@import 'tailwindcss';
+@import '@fontsource/jetbrains-mono/400.css';
+@import '@fontsource/jetbrains-mono/500.css';
+
+/*
+  Submission showcase — design tokens.
+  Type:    TWK Lausanne (UI grotesk) + JetBrains Mono (repo / commits / tech).
+           Two weights only, 400 regular and 500 medium. Hierarchy by size and color.
+  Palette: warm paper base, warm near-black ink, one accent (deep teal #146B5C)
+           reserved for the decision surface and primary actions. Everything else neutral.
+           Functional status hues (live / unreachable / checking) are small muted indicators.
+  Layout:  split — full-width header, then two-column body.
+  Spacing: 4 / 8 / 12 / 16 / 24 / 32 / 48 / 64.
+*/
+
+@font-face {
+  font-family: 'TWK Lausanne';
+  src: url('/fonts/TWKLausanne-400.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'TWK Lausanne';
+  src: url('/fonts/TWKLausanne-500.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
+:root {
+  /* surfaces */
+  --paper: #f4f2ec;
+  --surface: #ffffff;
+  --surface-sunk: #f7f5f0;
+  --surface-raised: #ffffff;
+
+  /* text */
+  --ink: #191710;
+  --body: #423f37;
+  --muted: #6b6659;
+  --faint: #8f8a7c;
+
+  /* lines */
+  --border: #e4e0d6;
+  --border-strong: #cbc6b8;
+
+  /* accent — decision surface + primary actions */
+  --accent: #146b5c;
+  --accent-hover: #10574a;
+  --accent-ink: #ffffff;
+  --accent-soft: #e2efeb;
+  --accent-line: #b7d8d0;
+
+  /* functional status (muted, small) */
+  --ok: #1f7a4d;
+  --ok-soft: #e3f0e7;
+  --warn: #8a5d0f;
+  --warn-soft: #f4ebd8;
+  --danger: #b23a2c;
+  --danger-soft: #f5e4e0;
+
+  color-scheme: light;
+}
+
+[data-theme='dark'] {
+  --paper: #0f100f;
+  --surface: #191a19;
+  --surface-sunk: #131413;
+  --surface-raised: #1f201e;
+
+  --ink: #f3f1ea;
+  --body: #c3bfb4;
+  --muted: #948f81;
+  --faint: #6f6b5f;
+
+  --border: #2c2d2a;
+  --border-strong: #3d3e3a;
+
+  --accent: #45b89f;
+  --accent-hover: #5cc9b1;
+  --accent-ink: #06211b;
+  --accent-soft: #16332c;
+  --accent-line: #285046;
+
+  --ok: #55c78c;
+  --ok-soft: #16301f;
+  --warn: #d4a24c;
+  --warn-soft: #322914;
+  --danger: #e0806f;
+  --danger-soft: #35211c;
+
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-surface-sunk: var(--surface-sunk);
+  --color-surface-raised: var(--surface-raised);
+
+  --color-ink: var(--ink);
+  --color-body: var(--body);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-line: var(--accent-line);
+
+  --color-ok: var(--ok);
+  --color-ok-soft: var(--ok-soft);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+
+  --font-sans: 'TWK Lausanne', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
+
+  /* spacing scale: 4 / 8 / 12 / 16 / 24 / 32 / 48 / 64 */
+  --spacing: 4px;
+}
+
+html {
+  background: var(--paper);
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 400;
+  color: var(--body);
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-synthesis: none;
+}
+
+::selection {
+  background: var(--accent-soft);
+  color: var(--ink);
+}
+
+/* thin, unobtrusive scrollbars inside scroll regions */
+.scroll-region {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}

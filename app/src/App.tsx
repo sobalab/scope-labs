@@ -1,0 +1,249 @@
+import { useEffect, useMemo, useState } from 'react';
+import {
+  submissions as fixtures,
+  type BlockState,
+  type Lifecycle,
+  type Submission,
+} from './data/submissions';
+import { NOW } from './lib/format';
+import { isTerminal } from './lib/lifecycle';
+import { PageShell } from './components/PageShell';
+import { ContextHeader } from './components/ContextHeader';
+import { EvidencePane } from './components/evidence/EvidencePane';
+import {
+  EvaluationPanel,
+  type EvaluationHandlers,
+} from './components/evaluation/EvaluationPanel';
+import { MobileEvaluationDrawer } from './components/evaluation/MobileEvaluationDrawer';
+import { QueueTable } from './components/QueueTable';
+import {
+  StateSwitcher,
+  type BlockKey,
+  type BlockOverride,
+  type SimState,
+} from './components/StateSwitcher';
+import { Toast } from './components/primitives/Toast';
+
+// Sample data injected when a block is *forced* to populated/error via the demo
+// controls but the underlying fixture has nothing there. Keeps every simulated
+// state visually real instead of blank.
+function fillBlock(
+  base: Submission,
+  key: BlockKey,
+  state: BlockState,
+): Submission[BlockKey] {
+  const current = base[key];
+  if (state !== 'populated' && state !== 'error') {
+    return { ...current, state } as Submission[BlockKey];
+  }
+
+  const live = state === 'populated' ? 'live' : 'unreachable';
+  switch (key) {
+    case 'approach':
+      return {
+        state,
+        body:
+          (current as Submission['approach']).body ??
+          'I scoped the problem to its riskiest part first, wrote tests around that, and left the polish for last. The README covers the trade-offs I accepted under the time limit.',
+      };
+    case 'demo':
+      return {
+        state,
+        url: (current as Submission['demo']).url ?? 'https://demo.candidate.app',
+        health: live,
+      };
+    case 'gallery':
+      return {
+        state,
+        images: (current as Submission['gallery']).images ?? [
+          'dashboard',
+          'detail-view',
+          'settings',
+        ],
+        failedCount: state === 'error' ? 3 : undefined,
+      };
+    case 'loom':
+      return {
+        state,
+        url:
+          (current as Submission['loom']).url ??
+          'https://www.loom.com/share/walkthrough',
+        health: live,
+      };
+    case 'repo':
+      return {
+        state,
+        url:
+          (current as Submission['repo']).url ??
+          'https://github.com/candidate/take-home',
+        readme:
+          (current as Submission['repo']).readme ??
+          '# take-home\n\nCore logic in src/. Run with `make dev`. Trade-offs in NOTES.md.',
+        languages: (current as Submission['repo']).languages ?? [
+          { name: 'TypeScript', pct: 82 },
+          { name: 'CSS', pct: 18 },
+        ],
+        commits: (current as Submission['repo']).commits ?? 24,
+        lastCommit: (current as Submission['repo']).lastCommit ?? NOW.toISOString(),
+        health: live,
+      };
+  }
+}
+
+const emptySim: SimState = { blocks: {}, lifecycle: 'auto' };
+
+export default function App() {
+  const [store, setStore] = useState<Record<string, Submission>>(() =>
+    Object.fromEntries(fixtures.map((s) => [s.id, s])),
+  );
+  const [view, setView] = useState<'queue' | 'showcase'>('showcase');
+  const [activeId, setActiveId] = useState<string>(fixtures[0].id);
+  const [sim, setSim] = useState<SimState>(emptySim);
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const [toast, setToast] = useState<string | null>(null);
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
+
+  const orderedSubmissions = useMemo(
+    () => fixtures.map((f) => store[f.id]),
+    [store],
+  );
+
+  // Effective submission = stored working copy with the demo overlay applied.
+  const effective = useMemo<Submission>(() => {
+    const base = store[activeId];
+    let next: Submission = { ...base };
+
+    for (const [k, override] of Object.entries(sim.blocks) as [
+      BlockKey,
+      BlockOverride,
+    ][]) {
+      if (!override || override === 'auto') continue;
+      next = { ...next, [k]: fillBlock(base, k, override) };
+    }
+
+    if (sim.lifecycle !== 'auto') {
+      next = { ...next, status: sim.lifecycle };
+      if (isTerminal(sim.lifecycle) && !next.decidedBy) {
+        next = { ...next, decidedBy: 'You', decidedAt: NOW.toISOString() };
+      }
+    }
+    return next;
+  }, [store, activeId, sim]);
+
+  const patchActive = (patch: Partial<Submission>) =>
+    setStore((prev) => ({
+      ...prev,
+      [activeId]: { ...prev[activeId], ...patch },
+    }));
+
+  const openSubmission = (id: string) => {
+    setActiveId(id);
+    setSim(emptySim);
+    setView('showcase');
+  };
+
+  const handlers: EvaluationHandlers = {
+    onScore: (criterion, value) =>
+      patchActive({
+        scorecard: store[activeId].scorecard.map((s) =>
+          s.criterion === criterion ? { ...s, score: value } : s,
+        ),
+      }),
+    onNotes: (value) => patchActive({ notes: value }),
+    onAdvance: () => {
+      patchActive({
+        status: 'advanced',
+        decidedBy: 'You',
+        decidedAt: NOW.toISOString(),
+      });
+      setSim((s) => ({ ...s, lifecycle: 'auto' }));
+      setToast(`Advanced ${store[activeId].candidate.name}.`);
+    },
+    onReject: () => {
+      patchActive({
+        status: 'rejected',
+        decidedBy: 'You',
+        decidedAt: NOW.toISOString(),
+      });
+      setSim((s) => ({ ...s, lifecycle: 'auto' }));
+      setToast(`Rejected ${store[activeId].candidate.name}.`);
+    },
+    onRequestMore: () => {
+      patchActive({ status: 'awaiting-candidate' });
+      setSim((s) => ({ ...s, lifecycle: 'auto' }));
+      setToast('Parked and requested more from the candidate.');
+    },
+    onResume: () => {
+      patchActive({ status: 'in-review' });
+      setSim((s) => ({ ...s, lifecycle: 'auto' }));
+      setToast('Returned to review.');
+    },
+  };
+
+  const requestArtifact = (what: string) => {
+    if (!isTerminal(effective.status)) {
+      patchActive({ status: 'awaiting-candidate' });
+    }
+    setToast(`Requested ${what} from the candidate.`);
+  };
+
+  const bulkReRequest = () => {
+    if (!isTerminal(effective.status)) {
+      patchActive({ status: 'awaiting-candidate' });
+    }
+    setToast('Requested fresh links for every broken artifact.');
+  };
+
+  return (
+    <>
+      {view === 'queue' ? (
+        <QueueTable submissions={orderedSubmissions} onOpen={openSubmission} />
+      ) : (
+        <>
+          <PageShell
+            header={
+              <ContextHeader
+                submission={effective}
+                onBack={() => setView('queue')}
+              />
+            }
+            evidence={
+              <EvidencePane
+                submission={effective}
+                onRequest={requestArtifact}
+                onBulkReRequest={bulkReRequest}
+              />
+            }
+            evaluation={
+              <EvaluationPanel submission={effective} handlers={handlers} />
+            }
+          />
+          {/* Bottom padding so the mobile trigger bar never covers content. */}
+          <div className="h-[72px] lg:hidden" />
+          <MobileEvaluationDrawer submission={effective} handlers={handlers} />
+        </>
+      )}
+
+      <StateSwitcher
+        submissions={orderedSubmissions}
+        activeId={activeId}
+        onPick={openSubmission}
+        sim={sim}
+        onSetBlock={(key: BlockKey, value: BlockOverride) =>
+          setSim((s) => ({ ...s, blocks: { ...s.blocks, [key]: value } }))
+        }
+        onSetLifecycle={(value: Lifecycle | 'auto') =>
+          setSim((s) => ({ ...s, lifecycle: value }))
+        }
+        onReset={() => setSim(emptySim)}
+        theme={theme}
+        onToggleTheme={() => setTheme((t) => (t === 'light' ? 'dark' : 'light'))}
+      />
+
+      <Toast message={toast} onDismiss={() => setToast(null)} />
+    </>
+  );
+}
