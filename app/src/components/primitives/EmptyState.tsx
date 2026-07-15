@@ -39,12 +39,12 @@ export function EmptyState({ type, action, signal = false }: EmptyStateProps) {
   return (
     <div
       className={[
-        'flex flex-col items-start gap-12 rounded-lg border border-dashed px-16 py-24',
+        'flex flex-col items-start gap-3 rounded-lg border border-dashed px-4 py-6',
         signal ? 'border-warn/40 bg-warn-soft/30' : 'border-border bg-surface-sunk',
       ].join(' ')}
     >
-      <div className="space-y-4">
-        <p className="flex items-center gap-8 text-[14px] font-medium text-ink">
+      <div className="space-y-1">
+        <p className="flex items-center gap-2 text-[14px] font-medium text-ink">
           {signal && (
             <span
               className="h-[7px] w-[7px] rounded-full bg-warn"
@@ -60,7 +60,7 @@ export function EmptyState({ type, action, signal = false }: EmptyStateProps) {
         <button
           type="button"
           onClick={action.onClick}
-          className="rounded-md border border-border-strong bg-surface px-12 py-[7px] text-[13px] font-medium text-ink transition-colors hover:border-accent hover:text-accent"
+          className="rounded-md border border-border-strong bg-surface px-3 py-[7px] text-[13px] font-medium text-ink transition-colors hover:border-accent hover:text-accent"
         >
           {action.label}
         </button>

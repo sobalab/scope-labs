@@ -26,9 +26,9 @@ export function PageShell({ header, evidence, evaluation }: PageShellProps) {
     <div className="min-h-screen bg-paper text-body">
       <div className="mx-auto max-w-[1240px]">
         {header}
-        <div className="grid grid-cols-1 items-start gap-32 px-32 py-32 lg:grid-cols-[minmax(0,1fr)_360px]">
-          <main className="min-w-0 space-y-24">{evidence}</main>
-          <aside className="sticky top-24 hidden lg:block">{evaluation}</aside>
+        <div className="grid grid-cols-1 items-start gap-8 px-8 py-8 lg:grid-cols-[minmax(0,1fr)_360px]">
+          <main className="min-w-0 space-y-6">{evidence}</main>
+          <aside className="sticky top-6 hidden lg:block">{evaluation}</aside>
         </div>
       </div>
     </div>

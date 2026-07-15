@@ -31,9 +31,9 @@ export function DemoEmbed({ demo, onRequest, onRetry }: DemoEmbedProps) {
 
   if (demo.state === 'error') {
     return (
-      <div className="flex flex-col items-start gap-16 rounded-lg border border-danger/25 bg-danger-soft/40 px-16 py-24">
-        <div className="space-y-4">
-          <p className="flex items-center gap-8 text-[14px] font-medium text-ink">
+      <div className="flex flex-col items-start gap-4 rounded-lg border border-danger/25 bg-danger-soft/40 px-4 py-6">
+        <div className="space-y-1">
+          <p className="flex items-center gap-2 text-[14px] font-medium text-ink">
             Demo unreachable
           </p>
           <p className="max-w-[46ch] text-[13px] leading-[1.5] text-muted">
@@ -41,15 +41,15 @@ export function DemoEmbed({ demo, onRequest, onRetry }: DemoEmbedProps) {
             down since submission.
           </p>
           {demo.url && (
-            <p className="pt-4 font-mono text-[12px] text-faint">{demo.url}</p>
+            <p className="pt-1 font-mono text-[12px] text-faint">{demo.url}</p>
           )}
         </div>
-        <div className="flex items-center gap-16">
+        <div className="flex items-center gap-4">
           <LinkHealthIndicator health={demo.health ?? 'unreachable'} />
           <button
             type="button"
             onClick={onRetry}
-            className="rounded-md border border-border-strong bg-surface px-12 py-[7px] text-[13px] font-medium text-ink transition-colors hover:border-accent hover:text-accent"
+            className="rounded-md border border-border-strong bg-surface px-3 py-[7px] text-[13px] font-medium text-ink transition-colors hover:border-accent hover:text-accent"
           >
             Re-request working link
           </button>
@@ -61,13 +61,13 @@ export function DemoEmbed({ demo, onRequest, onRetry }: DemoEmbedProps) {
   // populated — a faux browser frame standing in for the live embed.
   return (
     <div className="overflow-hidden rounded-lg border border-border bg-surface-sunk">
-      <div className="flex items-center gap-12 border-b border-border bg-surface px-12 py-8">
+      <div className="flex items-center gap-3 border-b border-border bg-surface px-3 py-2">
         <div className="flex gap-[6px]" aria-hidden="true">
           <span className="h-[9px] w-[9px] rounded-full bg-border-strong" />
           <span className="h-[9px] w-[9px] rounded-full bg-border-strong" />
           <span className="h-[9px] w-[9px] rounded-full bg-border-strong" />
         </div>
-        <div className="flex-1 truncate rounded-md bg-surface-sunk px-12 py-[5px] font-mono text-[11px] text-muted">
+        <div className="flex-1 truncate rounded-md bg-surface-sunk px-3 py-[5px] font-mono text-[11px] text-muted">
           {demo.url}
         </div>
         <LinkHealthIndicator health={demo.health ?? 'live'} compact />
@@ -75,7 +75,7 @@ export function DemoEmbed({ demo, onRequest, onRetry }: DemoEmbedProps) {
           href={demo.url}
           target="_blank"
           rel="noreferrer"
-          className="inline-flex items-center gap-[6px] rounded-md px-8 py-[5px] text-[12px] font-medium text-accent transition-colors hover:bg-accent-soft"
+          className="inline-flex items-center gap-[6px] rounded-md px-2 py-[5px] text-[12px] font-medium text-accent transition-colors hover:bg-accent-soft"
         >
           <OpenIcon />
           Open
@@ -83,17 +83,17 @@ export function DemoEmbed({ demo, onRequest, onRetry }: DemoEmbedProps) {
       </div>
       {/* Mock rendered app — the live iframe would mount here. */}
       <div className="relative aspect-[16/10] w-full bg-surface">
-        <div className="absolute inset-0 flex flex-col gap-12 p-24">
+        <div className="absolute inset-0 flex flex-col gap-3 p-6">
           <div className="flex items-center justify-between">
             <div className="h-8 w-32 rounded bg-accent-soft" />
-            <div className="flex gap-8">
+            <div className="flex gap-2">
               <div className="h-8 w-16 rounded bg-border/70" />
               <div className="h-8 w-16 rounded bg-border/70" />
             </div>
           </div>
-          <div className="grid flex-1 grid-cols-3 gap-12">
+          <div className="grid flex-1 grid-cols-3 gap-3">
             <div className="col-span-2 rounded-lg border border-border bg-surface-sunk" />
-            <div className="space-y-12">
+            <div className="space-y-3">
               <div className="h-1/3 rounded-lg border border-border bg-surface-sunk" />
               <div className="h-1/3 rounded-lg border border-accent-line bg-accent-soft" />
             </div>

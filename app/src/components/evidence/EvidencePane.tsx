@@ -28,12 +28,12 @@ export function EvidencePane({
   return (
     <>
       {rotted >= 2 && (
-        <div className="flex flex-wrap items-center justify-between gap-16 rounded-xl border border-danger/25 bg-danger-soft/50 px-24 py-16">
+        <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-danger/25 bg-danger-soft/50 px-6 py-4">
           <div>
             <p className="text-[14px] font-medium text-ink">
               {rotted} links stopped resolving
             </p>
-            <p className="pt-4 text-[13px] leading-[1.5] text-muted">
+            <p className="pt-1 text-[13px] leading-[1.5] text-muted">
               Strong entries can rot after weeks in the queue. Ask for fresh
               links in one message instead of chasing each artifact.
             </p>
@@ -41,7 +41,7 @@ export function EvidencePane({
           <button
             type="button"
             onClick={onBulkReRequest}
-            className="shrink-0 rounded-lg bg-accent px-16 py-8 text-[13px] font-medium text-accent-ink transition-colors hover:bg-accent-hover"
+            className="shrink-0 rounded-lg bg-accent px-4 py-2 text-[13px] font-medium text-accent-ink transition-colors hover:bg-accent-hover"
           >
             Re-request working links
           </button>

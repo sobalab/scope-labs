@@ -25,7 +25,7 @@ interface EvaluationPanelProps {
 export function EvaluationPanel({ submission, handlers, bare = false }: EvaluationPanelProps) {
   const locked = isTerminal(submission.status);
   const body = (
-    <div className="space-y-24">
+    <div className="space-y-6">
       <Scorecard
         scores={submission.scorecard}
         locked={locked}
@@ -51,10 +51,10 @@ export function EvaluationPanel({ submission, handlers, bare = false }: Evaluati
   if (bare) return body;
 
   return (
-    <div className="rounded-xl border border-border bg-surface p-24">
-      <div className="mb-16">
+    <div className="rounded-xl border border-border bg-surface p-6">
+      <div className="mb-4">
         <h2 className="text-[15px] font-medium text-ink">Evaluation</h2>
-        <p className="pt-4 text-[12px] text-muted">
+        <p className="pt-1 text-[12px] text-muted">
           {locked ? 'Recorded decision, read only.' : 'Score, note, decide.'}
         </p>
       </div>

@@ -15,12 +15,12 @@ function ScreenshotTile({ name, onOpen }: { name: string; onOpen: () => void }) 
       onClick={onOpen}
       className="group relative aspect-[16/10] overflow-hidden rounded-lg border border-border bg-surface-sunk text-left transition-colors hover:border-accent-line"
     >
-      <div className="absolute inset-0 flex flex-col gap-8 p-12 opacity-70">
+      <div className="absolute inset-0 flex flex-col gap-2 p-3 opacity-70">
         <div className="h-6 w-1/3 rounded bg-accent-soft" />
         <div className="flex-1 rounded border border-border bg-surface" />
         <div className="h-6 w-1/2 rounded bg-border/70" />
       </div>
-      <span className="absolute bottom-0 left-0 right-0 bg-surface/85 px-12 py-8 font-mono text-[11px] text-muted backdrop-blur-[1px]">
+      <span className="absolute bottom-0 left-0 right-0 bg-surface/85 px-3 py-2 font-mono text-[11px] text-muted backdrop-blur-[1px]">
         {name}.png
       </span>
     </button>
@@ -32,7 +32,7 @@ export function MediaGallery({ gallery }: MediaGalleryProps) {
 
   if (gallery.state === 'loading') {
     return (
-      <div className="grid grid-cols-2 gap-12">
+      <div className="grid grid-cols-2 gap-3">
         {Array.from({ length: 4 }, (_, i) => (
           <Skeleton key={i} className="aspect-[16/10] w-full" />
         ))}
@@ -43,11 +43,11 @@ export function MediaGallery({ gallery }: MediaGalleryProps) {
   if (gallery.state === 'error') {
     const failed = gallery.failedCount ?? gallery.images?.length ?? 0;
     return (
-      <div className="grid grid-cols-2 gap-12">
+      <div className="grid grid-cols-2 gap-3">
         {Array.from({ length: Math.max(failed, 2) }, (_, i) => (
           <div
             key={i}
-            className="flex aspect-[16/10] flex-col items-center justify-center gap-8 rounded-lg border border-dashed border-danger/30 bg-danger-soft/30"
+            className="flex aspect-[16/10] flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-danger/30 bg-danger-soft/30"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true" className="text-danger/70">
               <path d="M3 16l5-5 4 4 3-3 6 6M3 5h18v14H3z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -66,7 +66,7 @@ export function MediaGallery({ gallery }: MediaGalleryProps) {
   const images = gallery.images ?? [];
   return (
     <>
-      <div className="grid grid-cols-2 gap-12">
+      <div className="grid grid-cols-2 gap-3">
         {images.map((name) => (
           <ScreenshotTile key={name} name={name} onOpen={() => setLightbox(name)} />
         ))}
@@ -74,7 +74,7 @@ export function MediaGallery({ gallery }: MediaGalleryProps) {
 
       {lightbox && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-ink/70 p-32"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-ink/70 p-8"
           onClick={() => setLightbox(null)}
           role="dialog"
           aria-modal="true"
@@ -84,18 +84,18 @@ export function MediaGallery({ gallery }: MediaGalleryProps) {
             className="w-full max-w-[900px] overflow-hidden rounded-xl border border-border bg-surface shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between border-b border-border px-16 py-12">
+            <div className="flex items-center justify-between border-b border-border px-4 py-3">
               <span className="font-mono text-[12px] text-muted">{lightbox}.png</span>
               <button
                 type="button"
                 onClick={() => setLightbox(null)}
-                className="rounded-md px-8 py-4 text-[13px] font-medium text-muted transition-colors hover:text-ink"
+                className="rounded-md px-2 py-1 text-[13px] font-medium text-muted transition-colors hover:text-ink"
               >
                 Close
               </button>
             </div>
             <div className="relative aspect-[16/10] w-full bg-surface-sunk">
-              <div className="absolute inset-0 flex flex-col gap-12 p-32 opacity-70">
+              <div className="absolute inset-0 flex flex-col gap-3 p-8 opacity-70">
                 <div className="h-12 w-1/3 rounded bg-accent-soft" />
                 <div className="flex-1 rounded-lg border border-border bg-surface" />
                 <div className="h-12 w-1/2 rounded bg-border/70" />

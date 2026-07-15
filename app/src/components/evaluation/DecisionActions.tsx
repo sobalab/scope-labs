@@ -33,17 +33,17 @@ export function DecisionActions({
   if (meta.terminal) {
     const tone = status === 'advanced' ? 'text-ok' : 'text-danger';
     return (
-      <div className="rounded-lg border border-border bg-surface-sunk px-16 py-16">
-        <p className={`flex items-center gap-8 text-[14px] font-medium ${tone}`}>
+      <div className="rounded-lg border border-border bg-surface-sunk px-4 py-4">
+        <p className={`flex items-center gap-2 text-[14px] font-medium ${tone}`}>
           {status === 'advanced' && <CheckIcon />}
           {meta.label}
         </p>
         {decidedBy && decidedAt && (
-          <p className="pt-4 text-[12px] text-muted">
+          <p className="pt-1 text-[12px] text-muted">
             by {decidedBy} on {formatDateTime(decidedAt)}
           </p>
         )}
-        <p className="pt-12 text-[12px] leading-[1.5] text-faint">
+        <p className="pt-3 text-[12px] leading-[1.5] text-faint">
           This decision is recorded. The scorecard is locked. Re-open from the
           queue to change it.
         </p>
@@ -52,18 +52,18 @@ export function DecisionActions({
   }
 
   return (
-    <div className="space-y-12">
+    <div className="space-y-3">
       {status === 'awaiting-candidate' && (
-        <div className="rounded-lg border border-warn/30 bg-warn-soft/40 px-12 py-12">
+        <div className="rounded-lg border border-warn/30 bg-warn-soft/40 px-3 py-3">
           <p className="text-[13px] font-medium text-ink">Parked on the candidate</p>
-          <p className="pt-4 text-[12px] leading-[1.5] text-muted">
+          <p className="pt-1 text-[12px] leading-[1.5] text-muted">
             A missing artifact was requested. The submission re-queues when they
             respond, rather than being penalized for the gap.
           </p>
           <button
             type="button"
             onClick={onResume}
-            className="mt-8 text-[12px] font-medium text-accent transition-colors hover:text-accent-hover"
+            className="mt-2 text-[12px] font-medium text-accent transition-colors hover:text-accent-hover"
           >
             Return to review
           </button>
@@ -73,23 +73,23 @@ export function DecisionActions({
       <button
         type="button"
         onClick={onAdvance}
-        className="flex w-full items-center justify-center gap-8 rounded-lg bg-accent px-16 py-12 text-[14px] font-medium text-accent-ink transition-colors hover:bg-accent-hover"
+        className="flex w-full items-center justify-center gap-2 rounded-lg bg-accent px-4 py-3 text-[14px] font-medium text-accent-ink transition-colors hover:bg-accent-hover"
       >
         <CheckIcon />
         Advance
       </button>
-      <div className="flex gap-12">
+      <div className="flex gap-3">
         <button
           type="button"
           onClick={onReject}
-          className="flex-1 rounded-lg border border-border-strong bg-surface px-16 py-12 text-[14px] font-medium text-ink transition-colors hover:border-danger hover:text-danger"
+          className="flex-1 rounded-lg border border-border-strong bg-surface px-4 py-3 text-[14px] font-medium text-ink transition-colors hover:border-danger hover:text-danger"
         >
           Reject
         </button>
         <button
           type="button"
           onClick={onRequestMore}
-          className="flex-1 rounded-lg border border-border-strong bg-surface px-16 py-12 text-[14px] font-medium text-ink transition-colors hover:border-accent hover:text-accent"
+          className="flex-1 rounded-lg border border-border-strong bg-surface px-4 py-3 text-[14px] font-medium text-ink transition-colors hover:border-accent hover:text-accent"
         >
           Request more
         </button>

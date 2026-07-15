@@ -13,7 +13,7 @@ interface ScorecardProps {
 export function Scorecard({ scores, locked, onScore }: ScorecardProps) {
   const scored = scores.filter((s) => s.score != null).length;
   return (
-    <div className="space-y-16">
+    <div className="space-y-4">
       <div className="flex items-baseline justify-between">
         <h2 className="text-[13px] font-medium uppercase tracking-[0.06em] text-muted">
           Scorecard
@@ -23,13 +23,13 @@ export function Scorecard({ scores, locked, onScore }: ScorecardProps) {
         </span>
       </div>
 
-      <div className="space-y-16">
+      <div className="space-y-4">
         {scores.map((s) => (
-          <div key={s.criterion} className="space-y-8">
-            <div className="flex items-center justify-between gap-12">
+          <div key={s.criterion} className="space-y-2">
+            <div className="flex items-center justify-between gap-3">
               <span className="text-[13px] text-body">{s.criterion}</span>
               <span className="font-mono text-[12px] text-faint">
-                {s.score != null ? `${s.score}/${s.max}` : '—'}
+                {s.score != null ? `${s.score}/${s.max}` : 'not set'}
               </span>
             </div>
             <RatingControl

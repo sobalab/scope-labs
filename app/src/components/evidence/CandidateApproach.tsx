@@ -15,7 +15,7 @@ export function CandidateApproach({ approach, onRequest }: CandidateApproachProp
   return (
     <SectionCard title="Approach">
       {approach.state === 'loading' && (
-        <div className="space-y-12">
+        <div className="space-y-3">
           <Skeleton className="h-4 w-[92%]" />
           <Skeleton className="h-4 w-full" />
           <Skeleton className="h-4 w-[85%]" />
@@ -24,7 +24,7 @@ export function CandidateApproach({ approach, onRequest }: CandidateApproachProp
       )}
 
       {approach.state === 'populated' && approach.body && (
-        <div className="space-y-16 text-[16px] leading-[1.65] text-body">
+        <div className="space-y-4 text-[16px] leading-[1.65] text-body">
           {approach.body.split('\n\n').map((para, i) => (
             <p key={i}>{para}</p>
           ))}

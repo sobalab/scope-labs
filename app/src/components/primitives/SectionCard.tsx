@@ -25,9 +25,9 @@ export function SectionCard({
       ? 'border-danger/25 bg-danger-soft/40'
       : 'border-border bg-surface';
   return (
-    <section className={`rounded-xl border ${surround} p-24`}>
+    <section className={`rounded-xl border ${surround} p-6`}>
       {(title || aside) && (
-        <header className="mb-16 flex items-center justify-between gap-16">
+        <header className="mb-4 flex items-center justify-between gap-4">
           {title && (
             <h2 className="text-[13px] font-medium uppercase tracking-[0.06em] text-muted">
               {title}

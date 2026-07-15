@@ -23,9 +23,9 @@ export function MobileEvaluationDrawer({
   return (
     <div className="lg:hidden">
       {/* persistent trigger bar */}
-      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-surface px-16 py-12">
-        <div className="flex items-center justify-between gap-16">
-          <div className="flex items-center gap-12">
+      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-surface px-4 py-3">
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
             <StatusBadge label={meta.label} tone={meta.tone} />
             <span className="font-mono text-[12px] text-faint">
               {scored}/{submission.scorecard.length}
@@ -34,7 +34,7 @@ export function MobileEvaluationDrawer({
           <button
             type="button"
             onClick={() => setOpen(true)}
-            className="rounded-lg bg-accent px-16 py-8 text-[14px] font-medium text-accent-ink"
+            className="rounded-lg bg-accent px-4 py-2 text-[14px] font-medium text-accent-ink"
           >
             {isTerminal(submission.status) ? 'View decision' : 'Score'}
           </button>
@@ -48,16 +48,16 @@ export function MobileEvaluationDrawer({
             onClick={() => setOpen(false)}
             aria-hidden="true"
           />
-          <div className="relative max-h-[88vh] overflow-auto rounded-t-2xl border-t border-border bg-surface px-16 pb-24 pt-12">
-            <div className="mb-16 flex items-center justify-between">
+          <div className="relative max-h-[88vh] overflow-auto rounded-t-2xl border-t border-border bg-surface px-4 pb-6 pt-3">
+            <div className="mb-4 flex items-center justify-between">
               <span
-                className="mx-auto h-4 w-40 rounded-full bg-border-strong"
+                className="mx-auto h-[4px] w-[40px] rounded-full bg-border-strong"
                 aria-hidden="true"
               />
               <button
                 type="button"
                 onClick={() => setOpen(false)}
-                className="absolute right-16 text-[13px] font-medium text-muted"
+                className="absolute right-4 text-[13px] font-medium text-muted"
               >
                 Close
               </button>

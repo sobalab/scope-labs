@@ -22,8 +22,8 @@ const LANG_SHADES = [
 
 function LanguageBar({ languages }: { languages: { name: string; pct: number }[] }) {
   return (
-    <div className="space-y-12">
-      <div className="flex h-8 w-full overflow-hidden rounded-full">
+    <div className="space-y-3">
+      <div className="flex h-[10px] w-full overflow-hidden rounded-full">
         {languages.map((lang, i) => (
           <div
             key={lang.name}
@@ -32,7 +32,7 @@ function LanguageBar({ languages }: { languages: { name: string; pct: number }[]
           />
         ))}
       </div>
-      <div className="flex flex-wrap gap-x-16 gap-y-8">
+      <div className="flex flex-wrap gap-x-4 gap-y-2">
         {languages.map((lang, i) => (
           <span key={lang.name} className="inline-flex items-center gap-[6px] text-[12px]">
             <span
@@ -58,9 +58,9 @@ export function RepoSummary({ repo, onRequestReadme, onRequestAccess }: RepoSumm
   if (repo.state === 'loading') {
     return (
       <SectionCard title="Repository">
-        <div className="space-y-16">
-          <Skeleton className="h-8 w-full" />
-          <div className="space-y-12">
+        <div className="space-y-4">
+          <Skeleton className="h-[10px] w-full" />
+          <div className="space-y-3">
             <Skeleton className="h-4 w-[90%]" />
             <Skeleton className="h-4 w-[95%]" />
             <Skeleton className="h-4 w-[60%]" />
@@ -73,23 +73,23 @@ export function RepoSummary({ repo, onRequestReadme, onRequestAccess }: RepoSumm
   if (repo.state === 'error') {
     return (
       <SectionCard title="Repository" variant="alert">
-        <div className="flex flex-col items-start gap-16">
-          <div className="space-y-4">
+        <div className="flex flex-col items-start gap-4">
+          <div className="space-y-1">
             <p className="text-[14px] font-medium text-ink">Repository private or 404</p>
             <p className="max-w-[50ch] text-[13px] leading-[1.5] text-muted">
               The repository did not resolve on the last check. Access may have
               been revoked, or the repo was made private after submission.
             </p>
             {repo.url && (
-              <p className="pt-4 font-mono text-[12px] text-faint">{repo.url}</p>
+              <p className="pt-1 font-mono text-[12px] text-faint">{repo.url}</p>
             )}
           </div>
-          <div className="flex items-center gap-16">
+          <div className="flex items-center gap-4">
             <LinkHealthIndicator health={repo.health ?? 'unreachable'} />
             <button
               type="button"
               onClick={onRequestAccess}
-              className="rounded-md border border-border-strong bg-surface px-12 py-[7px] text-[13px] font-medium text-ink transition-colors hover:border-accent hover:text-accent"
+              className="rounded-md border border-border-strong bg-surface px-3 py-[7px] text-[13px] font-medium text-ink transition-colors hover:border-accent hover:text-accent"
             >
               Request access
             </button>
@@ -105,7 +105,7 @@ export function RepoSummary({ repo, onRequestReadme, onRequestAccess }: RepoSumm
       href={repo.url}
       target="_blank"
       rel="noreferrer"
-      className="inline-flex items-center gap-8 font-mono text-[12px] text-muted transition-colors hover:text-accent"
+      className="inline-flex items-center gap-2 font-mono text-[12px] text-muted transition-colors hover:text-accent"
     >
       <GitHubMark />
       {repo.url.replace('https://github.com/', '')}
@@ -116,7 +116,7 @@ export function RepoSummary({ repo, onRequestReadme, onRequestAccess }: RepoSumm
   if (repo.state === 'empty') {
     return (
       <SectionCard title="Repository" aside={repoLink}>
-        <div className="space-y-24">
+        <div className="space-y-6">
           {repo.languages && repo.languages.length > 0 && (
             <LanguageBar languages={repo.languages} />
           )}
@@ -133,8 +133,8 @@ export function RepoSummary({ repo, onRequestReadme, onRequestAccess }: RepoSumm
   // populated
   return (
     <SectionCard title="Repository" aside={repoLink}>
-      <div className="space-y-24">
-        <div className="flex flex-wrap items-center gap-x-24 gap-y-8 font-mono text-[12px] text-muted">
+      <div className="space-y-6">
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-[12px] text-muted">
           {repo.commits != null && (
             <span>
               <span className="text-ink">{repo.commits}</span> commits
@@ -153,10 +153,10 @@ export function RepoSummary({ repo, onRequestReadme, onRequestAccess }: RepoSumm
 
         {repo.readme && (
           <div className="rounded-lg border border-border bg-surface-sunk">
-            <div className="flex items-center gap-8 border-b border-border px-16 py-8 font-mono text-[11px] uppercase tracking-[0.06em] text-faint">
+            <div className="flex items-center gap-2 border-b border-border px-4 py-2 font-mono text-[11px] uppercase tracking-[0.06em] text-faint">
               README.md
             </div>
-            <pre className="scroll-region max-h-[280px] overflow-auto whitespace-pre-wrap px-16 py-16 font-mono text-[12.5px] leading-[1.6] text-body">
+            <pre className="scroll-region max-h-[280px] overflow-auto whitespace-pre-wrap px-4 py-4 font-mono text-[12.5px] leading-[1.6] text-body">
               {repo.readme}
             </pre>
           </div>

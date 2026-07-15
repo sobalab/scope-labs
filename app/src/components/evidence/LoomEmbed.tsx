@@ -24,21 +24,21 @@ export function LoomEmbed({ loom, onRequest, onRetry }: LoomEmbedProps) {
 
   if (loom.state === 'error') {
     return (
-      <div className="flex flex-col items-start gap-16 rounded-lg border border-danger/25 bg-danger-soft/40 px-16 py-24">
-        <div className="space-y-4">
+      <div className="flex flex-col items-start gap-4 rounded-lg border border-danger/25 bg-danger-soft/40 px-4 py-6">
+        <div className="space-y-1">
           <p className="text-[14px] font-medium text-ink">Video removed or private</p>
           <p className="max-w-[46ch] text-[13px] leading-[1.5] text-muted">
             The walkthrough no longer resolves. It was likely deleted or set to
             private after submission.
           </p>
           {loom.url && (
-            <p className="pt-4 font-mono text-[12px] text-faint">{loom.url}</p>
+            <p className="pt-1 font-mono text-[12px] text-faint">{loom.url}</p>
           )}
         </div>
         <button
           type="button"
           onClick={onRetry}
-          className="rounded-md border border-border-strong bg-surface px-12 py-[7px] text-[13px] font-medium text-ink transition-colors hover:border-accent hover:text-accent"
+          className="rounded-md border border-border-strong bg-surface px-3 py-[7px] text-[13px] font-medium text-ink transition-colors hover:border-accent hover:text-accent"
         >
           Re-request walkthrough
         </button>
@@ -54,7 +54,7 @@ export function LoomEmbed({ loom, onRequest, onRetry }: LoomEmbedProps) {
       rel="noreferrer"
       className="group relative block aspect-[16/9] w-full overflow-hidden rounded-lg border border-border bg-surface-sunk"
     >
-      <div className="absolute inset-0 flex flex-col gap-12 p-24 opacity-60">
+      <div className="absolute inset-0 flex flex-col gap-3 p-6 opacity-60">
         <div className="h-8 w-1/4 rounded bg-accent-soft" />
         <div className="flex-1 rounded-lg border border-border bg-surface" />
       </div>
@@ -65,7 +65,7 @@ export function LoomEmbed({ loom, onRequest, onRetry }: LoomEmbedProps) {
           </svg>
         </span>
       </div>
-      <span className="absolute bottom-12 left-12 rounded-md bg-ink/75 px-8 py-4 text-[11px] font-medium text-white">
+      <span className="absolute bottom-3 left-3 rounded-md bg-ink/75 px-2 py-1 text-[11px] font-medium text-white">
         Walkthrough, 4:12
       </span>
     </a>
