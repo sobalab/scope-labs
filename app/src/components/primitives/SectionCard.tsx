@@ -26,7 +26,7 @@ export function SectionCard({
       ? 'border-danger/25 bg-danger-soft/40'
       : 'border-border bg-surface shadow-[var(--shadow-card)]';
   return (
-    <section className={`rounded-[20px] border ${surround} p-6`}>
+    <section className={`rounded-2xl border ${surround} p-6`}>
       {(title || aside) && (
         <header className="mb-4 flex items-center justify-between gap-4">
           {title && <h2 className="eyebrow">{title}</h2>}

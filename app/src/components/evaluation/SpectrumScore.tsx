@@ -1,9 +1,8 @@
 import type { CSSProperties } from 'react';
 
 export interface SpectrumItem {
-  label: string; // short mono label, rides inside the marker chip
+  label: string; // short label, rides inside the marker chip
   value: number;
-  avg?: number; // optional faint cohort tick
 }
 
 interface SpectrumScoreProps {
@@ -12,12 +11,11 @@ interface SpectrumScoreProps {
   axisRight?: string;
   max?: number;
   finish?: 'dark' | 'light';
-  title?: string;
   className?: string;
 }
 
 // The system's signature data component. Each criterion is a spectrum from
-// axisLeft to axisRight; a mono-labelled marker sits at the score with a dashed
+// axisLeft to axisRight; a labelled marker sits at the score with a dashed
 // remainder. Used here as the read-only representation of a decided scorecard,
 // which is where a display-only spectrum belongs.
 //
@@ -30,19 +28,16 @@ export function SpectrumScore({
   axisRight = 'Exceptional',
   max = 4,
   finish = 'dark',
-  title,
   className = '',
 }: SpectrumScoreProps) {
   const dark = finish === 'dark';
   const c = {
     baseline: dark ? 'rgba(255,255,255,.2)' : 'rgba(20,30,45,.16)',
     fill: dark ? 'rgba(255,255,255,.72)' : 'var(--accent)',
-    tick: dark ? 'rgba(255,255,255,.35)' : 'rgba(20,30,45,.2)',
     chipBg: dark ? 'rgba(255,255,255,.95)' : 'var(--surface)',
     chipBorder: dark ? 'transparent' : 'var(--border-strong)',
     chipText: dark ? '#2f353c' : 'var(--dark-glass)',
     axis: dark ? 'rgba(255,255,255,.5)' : 'var(--muted)',
-    eyebrow: dark ? 'rgba(255,255,255,.55)' : 'var(--muted)',
     dots: dark ? 'rgba(255,255,255,.16)' : 'rgba(20,30,45,.07)',
   };
   const container: CSSProperties = dark
@@ -57,7 +52,7 @@ export function SpectrumScore({
 
   return (
     <div
-      className={`relative overflow-hidden rounded-[20px] ${className}`}
+      className={`relative overflow-hidden rounded-2xl ${className}`}
       style={{ padding: '24px 22px 20px', ...container }}
     >
       <div
@@ -70,29 +65,12 @@ export function SpectrumScore({
         }}
       />
       <div className="relative">
-        {title && (
-          <div
-            className="mb-[20px]"
-            style={{
-              font: '500 10px/1 var(--font-sans)',
-              letterSpacing: '0.15em',
-              textTransform: 'uppercase',
-              color: c.eyebrow,
-            }}
-          >
-            {title}
-          </div>
-        )}
         <div className="flex flex-col gap-[22px]">
           {items.map((it) => {
             const scored = it.value != null && it.value > 0;
             const pct = track(it.value);
-            const avgPct = it.avg != null ? track(it.avg) : null;
             return (
-              <div
-                key={it.label}
-                className="relative flex h-5 items-center"
-              >
+              <div key={it.label} className="relative flex h-5 items-center">
                 <div
                   className="absolute left-0 right-0"
                   style={{ height: 2, borderTop: `2px dashed ${c.baseline}` }}
@@ -103,26 +81,13 @@ export function SpectrumScore({
                     style={{ width: `${pct}%`, height: 2, background: c.fill }}
                   />
                 )}
-                {avgPct != null && (
-                  <div
-                    className="absolute top-1/2"
-                    style={{
-                      left: `${avgPct}%`,
-                      transform: 'translate(-50%,-50%)',
-                      width: 8,
-                      height: 8,
-                      borderRadius: 2,
-                      background: c.tick,
-                    }}
-                  />
-                )}
                 <div
                   className="absolute top-1/2 inline-flex items-center gap-[6px] whitespace-nowrap"
                   style={{
                     left: scored ? `${pct}%` : '10%',
                     transform: 'translate(-50%,-50%)',
                     padding: '4px 9px',
-                    borderRadius: 'var(--radius-sm, 6px)',
+                    borderRadius: 'var(--radius-sm)',
                     background: scored ? c.chipBg : 'transparent',
                     border: `1px solid ${scored ? c.chipBorder : c.baseline}`,
                     boxShadow: scored

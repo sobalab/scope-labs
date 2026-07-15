@@ -83,7 +83,7 @@ export function EvaluationPanel({
   if (bare) return body;
 
   return (
-    <GlassPanel finish="light" className="rise rounded-[20px] p-6">
+    <GlassPanel finish="light" className="rise rounded-2xl p-6">
       {body}
     </GlassPanel>
   );

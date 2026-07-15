@@ -1,26 +1,24 @@
 import { useState } from 'react';
 import type { Submission } from '../../data/submissions';
 import { Skeleton } from '../primitives/Skeleton';
+import { MockAppScreen } from './MockAppScreen';
 
 interface MediaGalleryProps {
   gallery: Submission['gallery'];
 }
 
-// A stand-in "screenshot" tile. No real image files (self-contained prototype),
-// so each tile renders a labelled placeholder that reads as a captured frame.
+// Each tile is a real-looking screenshot: the same product chrome ("Console"),
+// a different view per image. The filename caption stays opaque — glass is
+// reserved for floating chrome, not evidence tiles.
 function ScreenshotTile({ name, onOpen }: { name: string; onOpen: () => void }) {
   return (
     <button
       type="button"
       onClick={onOpen}
-      className="group relative aspect-[16/10] overflow-hidden rounded-lg border border-border bg-surface-sunk text-left transition-colors hover:border-accent-line"
+      className="group relative aspect-[16/10] overflow-hidden rounded-xl border border-border bg-surface text-left transition-colors hover:border-accent-line"
     >
-      <div className="absolute inset-0 flex flex-col gap-2 p-3 opacity-70">
-        <div className="h-6 w-1/3 rounded bg-accent-soft" />
-        <div className="flex-1 rounded border border-border bg-surface" />
-        <div className="h-6 w-1/2 rounded bg-border/70" />
-      </div>
-      <span className="absolute bottom-0 left-0 right-0 bg-surface/85 px-3 py-2 font-sans text-[11px] text-muted backdrop-blur-[1px]">
+      <MockAppScreen seed={name} className="absolute inset-0" />
+      <span className="absolute inset-x-0 bottom-0 bg-surface-sunk px-3 py-2 text-[11px] text-muted">
         {name}.png
       </span>
     </button>
@@ -47,7 +45,7 @@ export function MediaGallery({ gallery }: MediaGalleryProps) {
         {Array.from({ length: Math.max(failed, 2) }, (_, i) => (
           <div
             key={i}
-            className="flex aspect-[16/10] flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-danger/30 bg-danger-soft/30"
+            className="flex aspect-[16/10] flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-danger/30 bg-danger-soft/30"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true" className="text-danger/70">
               <path d="M3 16l5-5 4 4 3-3 6 6M3 5h18v14H3z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -74,18 +72,19 @@ export function MediaGallery({ gallery }: MediaGalleryProps) {
 
       {lightbox && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-ink/70 p-8"
+          className="fixed inset-0 z-50 flex items-center justify-center p-8"
+          style={{ background: 'rgba(20,30,45,.55)', backdropFilter: 'blur(3px)', WebkitBackdropFilter: 'blur(3px)' }}
           onClick={() => setLightbox(null)}
           role="dialog"
           aria-modal="true"
           aria-label={`${lightbox} preview`}
         >
           <div
-            className="w-full max-w-[900px] overflow-hidden rounded-xl border border-border bg-surface shadow-2xl"
+            className="w-full max-w-[900px] overflow-hidden rounded-2xl border border-border bg-surface shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between border-b border-border px-4 py-3">
-              <span className="font-sans text-[12px] text-muted">{lightbox}.png</span>
+              <span className="text-[12px] text-muted">{lightbox}.png</span>
               <button
                 type="button"
                 onClick={() => setLightbox(null)}
@@ -94,12 +93,8 @@ export function MediaGallery({ gallery }: MediaGalleryProps) {
                 Close
               </button>
             </div>
-            <div className="relative aspect-[16/10] w-full bg-surface-sunk">
-              <div className="absolute inset-0 flex flex-col gap-3 p-8 opacity-70">
-                <div className="h-12 w-1/3 rounded bg-accent-soft" />
-                <div className="flex-1 rounded-lg border border-border bg-surface" />
-                <div className="h-12 w-1/2 rounded bg-border/70" />
-              </div>
+            <div className="relative aspect-[16/10] w-full overflow-hidden bg-surface">
+              <MockAppScreen seed={lightbox} className="absolute inset-0" />
             </div>
           </div>
         </div>

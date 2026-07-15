@@ -25,7 +25,7 @@ export function QueueTable({ submissions, onOpen }: QueueTableProps) {
           </p>
         </header>
 
-        <div className="overflow-x-auto rounded-[20px] border border-border bg-surface shadow-[var(--shadow-card)]">
+        <div className="overflow-x-auto rounded-2xl border border-border bg-surface shadow-[var(--shadow-card)]">
         <table className="w-full min-w-[640px] table-fixed border-collapse text-left">
           <colgroup>
             <col className="w-[38%]" />
@@ -55,8 +55,8 @@ export function QueueTable({ submissions, onOpen }: QueueTableProps) {
                       <span
                         className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-[11px] font-normal text-white"
                         style={{
-                          background: 'linear-gradient(150deg, #8ea1b4, var(--accent))',
-                          boxShadow: 'inset 0 1px 0 rgba(255,255,255,.4)',
+                          background: 'linear-gradient(150deg, #5a7183, #3f5666)',
+                          boxShadow: 'inset 0 1px 0 rgba(255,255,255,.35)',
                         }}
                       >
                         {s.candidate.initials}
@@ -65,7 +65,7 @@ export function QueueTable({ submissions, onOpen }: QueueTableProps) {
                         <p className="truncate text-[14px] font-medium text-ink">
                           {s.candidate.name}
                         </p>
-                        <p className="truncate text-[12px] text-muted">{s.role}</p>
+                        <p className="text-[12px] leading-[1.3] text-muted">{s.role}</p>
                       </div>
                     </div>
                   </td>

@@ -19,24 +19,41 @@ lifecycle, and toggle light and dark.
 
 `npm run build` type-checks and produces a production bundle.
 
-## Design decisions
+## Design
 
-Four choices, stated once and held throughout (they live in a comment at the top
-of `src/components/PageShell.tsx` and in `src/index.css`):
+The interface adopts the "Frosted Glass" design system (cool-neutral,
+near-monochrome, one desaturated slate accent, frosted glass as the recurring
+signature) and integrates it into the existing multi-state architecture rather
+than replacing it. The choices live in a comment at the top of
+`src/components/PageShell.tsx` and in `src/index.css`.
 
-- **Type.** TWK Lausanne for the interface, JetBrains Mono for anything a
-  machine produced: repo paths, commit counts, language percentages, tech-stack
-  chips, timestamps. Two weights only, regular and medium. Hierarchy comes from
-  size and color, never from ultra-light weights.
-- **Palette.** A warm paper base, warm near-black ink, and one accent, a deep
-  teal, reserved for the decision surface and primary actions. Everything else
-  is neutral. Link-health hues (live, unreachable, checking) are small functional
-  indicators, not part of the brand. Every text and surface pair passes WCAG AA
-  in both themes.
+- **Type.** TWK Lausanne (a neutral grotesque) for everything readable. Mono
+  (IBM Plex Mono) is reserved for code only, which here is the README preview.
+  Labels, eyebrows, badges, timestamps, and data readouts are all sans. Two
+  weights, regular and medium; hierarchy comes from size and color.
+- **Palette.** A cool ground, near-black ink, and one slate accent (`#5a7183`)
+  reserved for the decision surface and primary actions. Everything else is
+  neutral. The primary action is solid ink, not the accent, so the accent stays
+  quiet. Link-health hues stay small and functional. Every text and surface pair
+  passes WCAG AA in both themes.
+- **Glass, used with restraint.** Frosted glass appears only on chrome that
+  floats over the gradient ground: the evaluation dock, the mobile sheet, the
+  header, overlays, and the dev control. Evidence blocks stay opaque white cards,
+  per the system's own rule that glass over plain white reads as a normal card.
 - **Layout.** One primitive, repeated: a split. A full-width context header,
-  then a two-column body. Evidence is a fluid column; evaluation is a fixed
-  360px so the decision surface never reflows, which is why it sticks cleanly.
+  then a two-column body. Evidence is a fluid column; the evaluation dock is a
+  fixed 360px so the decision surface never reflows, which is why it sticks
+  cleanly.
 - **Spacing.** 4 / 8 / 12 / 16 / 24 / 32 / 48 / 64, and nothing off it.
+
+### The spectrum scorecard
+
+The system's flagship data component is the `SpectrumScore`: each rubric
+criterion plotted on a "needs work → exceptional" spectrum with a labelled
+marker. It renders as the read-only representation of a **decided** submission,
+a dark dotted-grid panel inside the glass dock, so the recorded profile reads at
+a glance. While a submission is still open, the scorecard is the interactive
+segmented 1–4 scale; the spectrum is display-only, which is where it belongs.
 
 ## Two independent state axes
 

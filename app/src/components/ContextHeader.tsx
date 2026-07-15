@@ -40,8 +40,8 @@ export function ContextHeader({ submission, onBack }: ContextHeaderProps) {
           <div
             className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl font-sans text-[15px] font-normal text-white"
             style={{
-              background: 'linear-gradient(150deg, #8ea1b4, var(--accent))',
-              boxShadow: 'inset 0 1px 0 rgba(255,255,255,.4)',
+              background: 'linear-gradient(150deg, #5a7183, #3f5666)',
+              boxShadow: 'inset 0 1px 0 rgba(255,255,255,.35)',
             }}
             aria-hidden="true"
           >

@@ -2,6 +2,7 @@ import type { Submission } from '../../data/submissions';
 import { EmptyState } from '../primitives/EmptyState';
 import { Skeleton } from '../primitives/Skeleton';
 import { Button } from '../primitives/Button';
+import { MockAppScreen } from './MockAppScreen';
 
 interface LoomEmbedProps {
   loom: Submission['loom'];
@@ -43,26 +44,34 @@ export function LoomEmbed({ loom, onRequest, onRetry }: LoomEmbedProps) {
     );
   }
 
-  // populated — faux player poster with a play affordance.
+  // populated — a poster still of the walkthrough (the candidate's app on
+  // screen), with a play affordance and a fixed dark scrim behind the runtime.
   return (
     <a
       href={loom.url}
       target="_blank"
       rel="noreferrer"
-      className="group relative block aspect-[16/9] w-full overflow-hidden rounded-lg border border-border bg-surface-sunk"
+      className="group relative block aspect-[16/9] w-full overflow-hidden rounded-xl border border-border bg-surface-sunk"
     >
-      <div className="absolute inset-0 flex flex-col gap-3 p-6 opacity-60">
-        <div className="h-8 w-1/4 rounded bg-accent-soft" />
-        <div className="flex-1 rounded-lg border border-border bg-surface" />
-      </div>
+      <MockAppScreen seed={loom.url ?? 'loom'} title="Console" className="absolute inset-0" />
+      <div
+        className="absolute inset-0 transition-colors"
+        style={{ background: 'rgba(20,30,45,.34)' }}
+      />
       <div className="absolute inset-0 flex items-center justify-center">
-        <span className="flex h-16 w-16 items-center justify-center rounded-full bg-accent text-accent-ink shadow-lg transition-transform group-hover:scale-105">
+        <span
+          className="flex h-16 w-16 items-center justify-center rounded-full text-white shadow-lg transition-transform group-hover:scale-105"
+          style={{ background: 'rgba(20,30,45,.72)', backdropFilter: 'blur(4px)', WebkitBackdropFilter: 'blur(4px)' }}
+        >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
             <path d="M8 5v14l11-7z" />
           </svg>
         </span>
       </div>
-      <span className="absolute bottom-3 left-3 rounded-md bg-ink/75 px-2 py-1 text-[11px] font-medium text-white">
+      <span
+        className="absolute bottom-3 left-3 rounded-md px-2 py-1 text-[11px] font-medium text-white"
+        style={{ background: 'rgba(20,30,45,.72)' }}
+      >
         Walkthrough, 4:12
       </span>
     </a>

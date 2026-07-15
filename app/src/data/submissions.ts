@@ -348,6 +348,3 @@ Property tests assert the rate ceiling holds under a window. Benchmarks below.`,
       'Atomic Lua approach is exactly right for a limiter. Property tests over three algorithms is more rigor than the prompt asked for. Clear advance.',
   },
 ];
-
-export const getSubmission = (id: string): Submission | undefined =>
-  submissions.find((s) => s.id === id);

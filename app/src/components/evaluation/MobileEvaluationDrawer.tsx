@@ -56,7 +56,7 @@ export function MobileEvaluationDrawer({
             style={{ background: 'rgba(20,30,45,.5)', backdropFilter: 'blur(2px)' }}
           />
           <div
-            className="rise relative max-h-[88vh] overflow-auto rounded-t-[24px] border-t px-4 pb-6 pt-3"
+            className="rise relative max-h-[88vh] overflow-auto rounded-t-3xl border-t px-4 pb-6 pt-3"
             style={{
               background: 'var(--glass-light-bg)',
               borderColor: 'var(--glass-light-border)',

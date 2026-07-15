@@ -98,7 +98,7 @@ export function StateSwitcher(props: StateSwitcherProps) {
 
   return (
     <div
-      className="fixed right-4 top-4 z-40 w-[288px] rounded-[20px] border p-4"
+      className="fixed right-4 top-4 z-40 w-[288px] rounded-2xl border p-4"
       style={{
         background: 'var(--glass-light-bg)',
         borderColor: 'var(--glass-light-border)',

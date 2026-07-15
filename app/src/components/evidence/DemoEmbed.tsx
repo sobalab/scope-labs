@@ -3,6 +3,15 @@ import { EmptyState } from '../primitives/EmptyState';
 import { Skeleton } from '../primitives/Skeleton';
 import { LinkHealthIndicator } from '../primitives/LinkHealthIndicator';
 import { Button } from '../primitives/Button';
+import { MockAppScreen } from './MockAppScreen';
+
+// Derive a plausible product name from the deployed URL's first host label.
+function appName(url?: string): string {
+  if (!url) return 'Console';
+  const host = url.replace(/^https?:\/\//, '').split('/')[0];
+  const first = host.split('.')[0].replace(/-/g, ' ');
+  return first.charAt(0).toUpperCase() + first.slice(1);
+}
 
 interface DemoEmbedProps {
   demo: Submission['demo'];
@@ -78,24 +87,9 @@ export function DemoEmbed({ demo, onRequest, onRetry }: DemoEmbedProps) {
           Open
         </a>
       </div>
-      {/* Mock rendered app — the live iframe would mount here. */}
-      <div className="relative aspect-[16/10] w-full bg-surface">
-        <div className="absolute inset-0 flex flex-col gap-3 p-6">
-          <div className="flex items-center justify-between">
-            <div className="h-8 w-32 rounded bg-accent-soft" />
-            <div className="flex gap-2">
-              <div className="h-8 w-16 rounded bg-border/70" />
-              <div className="h-8 w-16 rounded bg-border/70" />
-            </div>
-          </div>
-          <div className="grid flex-1 grid-cols-3 gap-3">
-            <div className="col-span-2 rounded-lg border border-border bg-surface-sunk" />
-            <div className="space-y-3">
-              <div className="h-1/3 rounded-lg border border-border bg-surface-sunk" />
-              <div className="h-1/3 rounded-lg border border-accent-line bg-accent-soft" />
-            </div>
-          </div>
-        </div>
+      {/* The live iframe would mount here; the mock stands in for the deployed app. */}
+      <div className="relative aspect-[16/10] w-full overflow-hidden bg-surface">
+        <MockAppScreen seed={demo.url ?? 'demo'} title={appName(demo.url)} className="absolute inset-0" />
       </div>
     </div>
   );
