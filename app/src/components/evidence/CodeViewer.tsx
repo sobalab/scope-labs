@@ -74,7 +74,7 @@ export function CodeViewer({ path, content, lang, repoUrl, onClose }: CodeViewer
           </div>
         </div>
 
-        <div className="scroll-region min-h-0 flex-1 overflow-auto bg-surface-sunk">
+        <div className="code-scroll min-h-0 flex-1 overflow-auto bg-surface-sunk">
           <div className="min-w-full font-mono text-[12.5px] leading-[1.7]">
             {lines.map((line, i) => (
               <div key={i} className="flex">

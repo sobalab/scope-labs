@@ -256,3 +256,26 @@ body {
   scrollbar-width: thin;
   scrollbar-color: var(--border-strong) transparent;
 }
+
+/* Always-visible scrollbar for the code viewer, so a long file reads as
+   scrollable rather than cut off (macOS overlay scrollbars hide at rest).
+   Note: no `scrollbar-width` here — setting it makes Chrome ignore the styled
+   ::-webkit-scrollbar and fall back to the hidden overlay bar. */
+.code-scroll::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+.code-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.code-scroll::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 999px;
+  border: 3px solid var(--surface-sunk);
+  background-clip: padding-box;
+}
+.code-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--muted);
+  background-clip: padding-box;
+  border: 3px solid var(--surface-sunk);
+}
