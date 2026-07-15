@@ -50,6 +50,8 @@ export interface Submission {
     lastCommit?: string;
     // Recent commits, newest first. Each links out to the commit on the host.
     commitLog?: { sha: string; message: string; at: string }[];
+    // Flat list of file paths; the tree is built from these for display.
+    fileTree?: string[];
     health?: LinkHealth;
   };
   techStack: string[];
@@ -77,6 +79,15 @@ export const rolePosting = 'Senior Software Engineer';
 // time worked so the reviewer can read effort against the guide, transparently.
 export const suggestedTimeMinutes = 240; // 4 hours
 
+// The reviewers on this role. `currentReviewer` is who is signed in; the rest
+// share the queue, so the profile menu makes it clear who else is reviewing.
+export const currentReviewer = { name: 'Alex Chen', initials: 'AC' };
+export const reviewers = [
+  currentReviewer,
+  { name: 'Sam Rivera', initials: 'SR' },
+  { name: 'Nina Kovač', initials: 'NK' },
+];
+
 const emptyScorecard = (): RubricScore[] =>
   RUBRIC_CRITERIA.map((criterion) => ({ criterion, score: null, max: 4 }));
 
@@ -87,40 +98,124 @@ const scoredCard = (scores: (number | null)[]): RubricScore[] =>
     max: 4,
   }));
 
-// Realistic README bodies. Kept short; the RepoSummary renders the first stretch.
+// Full README bodies. The RepoSummary renders the whole thing in a scroll region.
 const streamReadme = `# realtime-ledger
 
 A double-entry ledger with an append-only event log and a projection layer
 for account balances. Writes go through a single command handler so every
 mutation is validated before it lands.
 
+## Contents
+- Running locally
+- Architecture
+- The write path
+- Balances as a projection
+- Reconciliation
+- Testing
+- Trade-offs
+- What I'd do next
+
 ## Running locally
 
     pnpm install
     pnpm dev        # api on :4000, web on :5173
+    pnpm test       # unit + property tests
 
-## Design notes
+Requires Node 20+ and a local Postgres (or run \`docker compose up db\`). Copy
+\`.env.example\` to \`.env\`; the defaults point at the docker database.
+
+## Architecture
+
+Three layers, deliberately boring:
+
+- \`command/\`  a single handler that validates and appends events. No writes
+  happen anywhere else, so there is exactly one place that can corrupt state.
+- \`events/\`   the append-only log plus the event schemas.
+- \`read/\`     projections folded from the log. Swappable and disposable.
+
+The API is Fastify; the read model is Postgres; the log is a Postgres table
+with an exclusion constraint on (account, sequence) so out-of-order or
+duplicate events cannot land.
+
+## The write path
+
+Every mutation is a command. The handler:
+
+1. loads the current sequence for the account,
+2. validates the command against the folded balance,
+3. appends the resulting event, and
+4. only then acknowledges to the caller.
+
+If step 3 fails, the caller gets an error and no partial state exists.
+
+## Balances as a projection
 
 Balances are never stored directly. They are folded from the event stream on
 read and cached per account, invalidated on new events. This keeps the write
 path honest and makes audit trivial: replay the log, you get the state.
 
+## Reconciliation
+
+The interesting failure modes live here: partial writes, out-of-order events,
+and the replay path after a cache miss. \`GET /accounts/:id/reconcile\` re-folds
+from event zero and diffs against the cache; the tests exercise each path.
+
+## Testing
+
+    pnpm test
+
+Property tests assert that no sequence of valid commands can produce a negative
+balance or a gap in the log. The reconciliation path has its own suite that
+injects out-of-order and duplicate events.
+
+## Trade-offs
+
 Trade-off I accepted under the time limit: the projection cache is in-memory,
 so a restart re-folds from event zero. Fine at this scale, not at production
-volume. See "What I'd do next" below.`;
+volume.
+
+I also skipped auth and multi-currency. Both are real, neither is the
+interesting part of this challenge.
+
+## What I'd do next
+
+- Move the projection cache out of process (Redis) so restarts are cheap.
+- Add backpressure on the command queue under write bursts.
+- Snapshot the log every N events so reconciliation does not re-fold from zero.`;
 
 const bareReadme = `# take-home
 
-Submission for the platform engineer take-home.
+Submission for the platform engineer take-home: a small file-sync daemon.
 
 ## Setup
 
     npm install
-    npm start
+    npm start        # runs on :3000
+    make test
 
-Runs on port 3000. I focused on getting the core sync loop correct rather
-than the UI, so most of the work is in src/sync. There is no deployed demo;
-clone and run to see it.`;
+Runs on port 3000. I focused on getting the core sync loop correct rather than
+the UI, so most of the work is in \`src/sync\`. There is no deployed demo; clone
+and run to see it.
+
+## How it works
+
+A single watcher (fsnotify) feeds a debounced queue. Events are coalesced per
+path so a burst of writes to one file becomes one sync. The index that maps
+paths to content hashes lives in SQLite so restarts are cheap.
+
+- \`src/sync\`    the loop: watch, debounce, diff, write.
+- \`src/index\`   the SQLite-backed path/hash index.
+- \`src/watch\`   the fsnotify wrapper and rename handling.
+
+## Known gaps
+
+- Renames are handled, but a rename plus an edit inside the debounce window can
+  still double-sync. Documented in \`NOTES.md\`.
+- No conflict resolution for two writers; last write wins.
+
+## What I'd add
+
+Content-addressed chunks so large files sync deltas, not the whole file.`;
 
 export const submissions: Submission[] = [
   // 1. Complete — the strong, fully-evidenced submission. Everything populated.
@@ -189,6 +284,20 @@ If I had another day I would move the projection cache out of process and add ba
         { sha: 'e28f150', message: 'Scaffold event log and projection layer', at: '2026-07-13T17:02:00Z' },
         { sha: '1b6d33a', message: 'Initial commit', at: '2026-07-13T14:20:00Z' },
       ],
+      fileTree: [
+        'src/command/handler.ts',
+        'src/command/validate.ts',
+        'src/events/log.ts',
+        'src/events/schema.ts',
+        'src/read/balances.ts',
+        'src/read/reconcile.ts',
+        'src/server.ts',
+        'test/ledger.test.ts',
+        'test/reconcile.test.ts',
+        'docker-compose.yml',
+        'package.json',
+        'README.md',
+      ],
       health: 'live',
     },
     techStack: ['TypeScript', 'Fastify', 'PostgreSQL', 'React', 'Vitest', 'Docker'],
@@ -242,6 +351,17 @@ If I had another day I would move the projection cache out of process and add ba
         { sha: '4a0f1d8', message: 'Debounce fsnotify events, batch writes', at: '2026-07-15T00:31:00Z' },
         { sha: 'd7b3a90', message: 'Add SQLite index for path lookups', at: '2026-07-14T22:10:00Z' },
         { sha: '2f9c845', message: 'Initial sync daemon', at: '2026-07-14T19:44:00Z' },
+      ],
+      fileTree: [
+        'cmd/syncd/main.go',
+        'src/sync/loop.go',
+        'src/sync/diff.go',
+        'src/index/sqlite.go',
+        'src/watch/fsnotify.go',
+        'Makefile',
+        'go.mod',
+        'NOTES.md',
+        'README.md',
       ],
       health: 'live',
     },
@@ -367,6 +487,16 @@ documented in ISSUES.md, not fixed.`,
         { sha: 'a17d4c8', message: 'Pure-function flag evaluation with tests', at: '2026-07-11T10:47:00Z' },
         { sha: '3c90b71', message: 'Initial commit', at: '2026-07-10T20:15:00Z' },
       ],
+      fileTree: [
+        'src/eval/evaluate.ts',
+        'src/eval/evaluate.test.ts',
+        'src/cache/pubsub.ts',
+        'src/admin/server.ts',
+        'ISSUES.md',
+        'Makefile',
+        'package.json',
+        'README.md',
+      ],
       health: 'live',
     },
     techStack: ['TypeScript', 'Go', 'Redis', 'gRPC'],
@@ -438,6 +568,18 @@ Property tests assert the rate ceiling holds under a window. Benchmarks below.`,
         { sha: 'c9083af', message: 'Token bucket behind the limiter interface', at: '2026-07-07T23:19:00Z' },
         { sha: '0d47e21', message: 'Benchmarks for all three algorithms', at: '2026-07-07T18:40:00Z' },
         { sha: '8a2f66c', message: 'Initial commit', at: '2026-07-07T15:05:00Z' },
+      ],
+      fileTree: [
+        'limiter/interface.go',
+        'limiter/tokenbucket.go',
+        'limiter/sliding_window.go',
+        'limiter/sliding_counter.go',
+        'lua/token_bucket.lua',
+        'lua/sliding.lua',
+        'bench/bench_test.go',
+        'main.go',
+        'go.mod',
+        'README.md',
       ],
       health: 'live',
     },

@@ -4,11 +4,12 @@ import { lifecycleMeta } from '../../lib/lifecycle';
 import { formatDateTime } from '../../lib/format';
 import { Button } from '../primitives/Button';
 import { StatusBadge } from '../primitives/StatusBadge';
+import { DecisionDialog } from './DecisionDialog';
 
 interface DecisionActionsProps {
   submission: Submission;
-  onAdvance: () => void;
-  onReject: () => void;
+  onAdvance: (email: boolean) => void;
+  onReject: (email: boolean) => void;
   onRequestMore: (summary: string) => void;
   onResume: () => void;
 }
@@ -51,6 +52,7 @@ export function DecisionActions({
 
   const materials = useMemo(() => materialsFor(submission), [submission]);
   const [choosing, setChoosing] = useState(false);
+  const [confirm, setConfirm] = useState<'advance' | 'reject' | null>(null);
   // Pre-select the gaps: the strongest materials the candidate did not include.
   const [picked, setPicked] = useState<Set<string>>(new Set());
 
@@ -174,18 +176,32 @@ export function DecisionActions({
       <div className="flex items-center justify-between">
         <span className="eyebrow">Recommendation</span>
       </div>
-      <Button variant="primary" size="lg" block onClick={onAdvance}>
+      <Button variant="primary" size="lg" block onClick={() => setConfirm('advance')}>
         <CheckIcon />
         Advance
       </Button>
       <div className="flex gap-3">
-        <Button variant="danger" block onClick={onReject}>
+        <Button variant="danger" block onClick={() => setConfirm('reject')}>
           Reject
         </Button>
         <Button variant="soft" block onClick={openChooser}>
           Request more
         </Button>
       </div>
+
+      {confirm && (
+        <DecisionDialog
+          kind={confirm}
+          firstName={firstName}
+          challenge={submission.challengeTitle}
+          onConfirm={(withEmail) => {
+            if (confirm === 'advance') onAdvance(withEmail);
+            else onReject(withEmail);
+            setConfirm(null);
+          }}
+          onCancel={() => setConfirm(null)}
+        />
+      )}
     </div>
   );
 }

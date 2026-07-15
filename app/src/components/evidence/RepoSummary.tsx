@@ -1,9 +1,11 @@
+import { useState } from 'react';
 import type { Submission } from '../../data/submissions';
 import { SectionCard } from '../primitives/SectionCard';
 import { EmptyState } from '../primitives/EmptyState';
 import { Skeleton } from '../primitives/Skeleton';
 import { LinkHealthIndicator } from '../primitives/LinkHealthIndicator';
 import { Button } from '../primitives/Button';
+import { FileTree } from './FileTree';
 import { timeSince } from '../../lib/format';
 
 interface RepoSummaryProps {
@@ -106,7 +108,7 @@ function CommitList({
               <span className="hidden shrink-0 text-[11px] text-faint sm:inline">
                 {timeSince(c.at)}
               </span>
-              <span className="shrink-0 text-faint opacity-0 transition-opacity group-hover:opacity-100">
+              <span className="shrink-0 text-faint opacity-50 transition-all group-hover:text-accent-text group-hover:opacity-100">
                 <ArrowIcon />
               </span>
             </a>
@@ -118,6 +120,9 @@ function CommitList({
 }
 
 export function RepoSummary({ repo, onRequestReadme, onRequestAccess }: RepoSummaryProps) {
+  // Which of the codebase views is showing: the file structure or the README.
+  const [repoView, setRepoView] = useState<'files' | 'readme'>('files');
+
   if (repo.state === 'loading') {
     return (
       <SectionCard title="Repository">
@@ -190,6 +195,7 @@ export function RepoSummary({ repo, onRequestReadme, onRequestAccess }: RepoSumm
   }
 
   // populated
+  const hasFiles = !!repo.fileTree && repo.fileTree.length > 0;
   return (
     <SectionCard title="Repository" aside={repoLink}>
       <div className="space-y-6">
@@ -218,14 +224,50 @@ export function RepoSummary({ repo, onRequestReadme, onRequestAccess }: RepoSumm
           />
         )}
 
-        {repo.readme && (
-          <div className="rounded-lg border border-border bg-surface-sunk">
-            <div className="flex items-center gap-2 border-b border-border px-4 py-2 font-sans text-[11px] uppercase tracking-[0.06em] text-faint">
-              README.md
+        {(hasFiles || repo.readme) && (
+          <div className="space-y-3">
+            <div className="flex items-center justify-between gap-3">
+              {hasFiles && repo.readme ? (
+                <div
+                  className="flex gap-[2px] rounded-full border border-border p-[3px]"
+                  role="tablist"
+                  style={{ background: 'var(--field-bg)' }}
+                >
+                  {(['files', 'readme'] as const).map((v) => (
+                    <button
+                      key={v}
+                      type="button"
+                      role="tab"
+                      aria-selected={repoView === v}
+                      onClick={() => setRepoView(v)}
+                      className={[
+                        'rounded-full px-[14px] py-[5px] text-[12px] transition-colors',
+                        repoView === v
+                          ? 'bg-ink text-[var(--surface)]'
+                          : 'text-muted hover:text-ink',
+                      ].join(' ')}
+                    >
+                      {v === 'files' ? 'Files' : 'Readme'}
+                    </button>
+                  ))}
+                </div>
+              ) : (
+                <span className="eyebrow">{hasFiles ? 'Files' : 'Readme'}</span>
+              )}
             </div>
-            <pre className="scroll-region max-h-[280px] overflow-auto whitespace-pre-wrap px-4 py-4 font-mono text-[12px] leading-[1.6] text-body">
-              {repo.readme}
-            </pre>
+
+            {(hasFiles && repoView === 'files') || !repo.readme ? (
+              <FileTree paths={repo.fileTree!} repoUrl={repo.url} readme={repo.readme} />
+            ) : (
+              <div className="rounded-lg border border-border bg-surface-sunk">
+                <div className="flex items-center gap-2 border-b border-border px-4 py-2 font-sans text-[11px] uppercase tracking-[0.06em] text-faint">
+                  README.md
+                </div>
+                <pre className="scroll-region max-h-[360px] overflow-auto whitespace-pre-wrap px-4 py-4 font-mono text-[12px] leading-[1.6] text-body">
+                  {repo.readme}
+                </pre>
+              </div>
+            )}
           </div>
         )}
       </div>

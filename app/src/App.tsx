@@ -90,6 +90,13 @@ function fillBlock(
           { sha: '7d22e0b', message: 'Add tests around the tricky path', at: NOW.toISOString() },
           { sha: '3f88a1c', message: 'Initial commit', at: NOW.toISOString() },
         ],
+        fileTree: (current as Submission['repo']).fileTree ?? [
+          'src/index.ts',
+          'src/core/handler.ts',
+          'src/core/handler.test.ts',
+          'package.json',
+          'README.md',
+        ],
         health: live,
       };
   }
@@ -158,23 +165,25 @@ export default function App() {
         ),
       }),
     onNotes: (value) => patchActive({ notes: value }),
-    onAdvance: () => {
+    onAdvance: (email: boolean) => {
       patchActive({
         status: 'advanced',
         decidedBy: 'You',
         decidedAt: NOW.toISOString(),
       });
       setSim((s) => ({ ...s, lifecycle: 'auto' }));
-      setToast(`Advanced ${store[activeId].candidate.name}.`);
+      const name = store[activeId].candidate.name;
+      setToast(email ? `Advanced ${name} and emailed them.` : `Advanced ${name}.`);
     },
-    onReject: () => {
+    onReject: (email: boolean) => {
       patchActive({
         status: 'rejected',
         decidedBy: 'You',
         decidedAt: NOW.toISOString(),
       });
       setSim((s) => ({ ...s, lifecycle: 'auto' }));
-      setToast(`Rejected ${store[activeId].candidate.name}.`);
+      const name = store[activeId].candidate.name;
+      setToast(email ? `Rejected ${name} and emailed them.` : `Rejected ${name}.`);
     },
     onRequestMore: (summary: string) => {
       patchActive({ status: 'awaiting-candidate', requested: summary });

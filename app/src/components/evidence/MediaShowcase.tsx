@@ -51,7 +51,7 @@ export function MediaShowcase({ submission, onRequest, onRetry }: MediaShowcaseP
   // Nothing provided at all — a single neutral empty for the whole block.
   if (!selected) {
     return (
-      <SectionCard title="Evidence">
+      <SectionCard title="Artifacts">
         <EmptyState
           type="demo"
           action={{ label: 'Request a demo or walkthrough', onClick: () => onRequest('demo') }}
@@ -62,7 +62,7 @@ export function MediaShowcase({ submission, onRequest, onRetry }: MediaShowcaseP
 
   return (
     <SectionCard
-      title="Evidence"
+      title="Artifacts"
       aside={
         kinds.length > 1 ? (
           <div

@@ -19,8 +19,10 @@ const variants: Record<Variant, string> = {
   ghost:
     'bg-surface text-[var(--dark-glass)] border border-border-strong hover:border-ink hover:text-ink',
   soft: 'bg-accent-soft text-accent-text border border-transparent hover:bg-[var(--accent-line)]',
+  // Red at rest (outline), intensifying to a soft fill on hover. Kept as an
+  // outline rather than a solid fill so it never out-shouts the accent Advance.
   danger:
-    'bg-surface text-[var(--dark-glass)] border border-border-strong hover:border-danger hover:text-danger',
+    'bg-surface text-danger border border-danger/60 hover:bg-danger-soft hover:border-danger',
 };
 
 const sizes: Record<Size, string> = {

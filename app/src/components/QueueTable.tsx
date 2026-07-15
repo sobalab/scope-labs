@@ -2,6 +2,7 @@ import type { Submission } from '../data/submissions';
 import { rolePosting } from '../data/submissions';
 import { StatusBadge } from './primitives/StatusBadge';
 import { ThemeToggle } from './ThemeToggle';
+import { ReviewerMenu } from './ReviewerMenu';
 import { lifecycleMeta } from '../lib/lifecycle';
 import { timeSince } from '../lib/format';
 
@@ -35,7 +36,10 @@ export function QueueTable({
               Pick one to evaluate.
             </p>
           </div>
-          <ThemeToggle theme={theme} onToggle={onToggleTheme} />
+          <div className="flex shrink-0 items-center gap-3">
+            <ReviewerMenu />
+            <ThemeToggle theme={theme} onToggle={onToggleTheme} />
+          </div>
         </header>
 
         <div className="overflow-x-auto rounded-2xl border border-border bg-surface shadow-[var(--shadow-card)]">

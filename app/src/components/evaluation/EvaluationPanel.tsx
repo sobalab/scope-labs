@@ -9,8 +9,8 @@ import { SpectrumScore, type SpectrumItem } from './SpectrumScore';
 export interface EvaluationHandlers {
   onScore: (criterion: string, value: number) => void;
   onNotes: (value: string) => void;
-  onAdvance: () => void;
-  onReject: () => void;
+  onAdvance: (email: boolean) => void;
+  onReject: (email: boolean) => void;
   onRequestMore: (summary: string) => void;
   onResume: () => void;
 }

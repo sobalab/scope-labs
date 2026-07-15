@@ -28,8 +28,11 @@ export function SectionCard({
   return (
     <section className={`rounded-2xl border ${surround} p-6`}>
       {(title || aside) && (
-        <header className="mb-4 flex items-center justify-between gap-4">
-          {title && <h2 className="eyebrow">{title}</h2>}
+        <header className="mb-4 flex items-start justify-between gap-4">
+          {/* pt-[3px] optically centers the small title against taller asides
+              (e.g. the tab group) while keeping its top offset consistent with
+              cards that have no aside. */}
+          {title && <h2 className="eyebrow pt-[3px]">{title}</h2>}
           {aside}
         </header>
       )}

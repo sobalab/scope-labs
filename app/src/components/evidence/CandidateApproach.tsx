@@ -24,10 +24,12 @@ export function CandidateApproach({ approach, onRequest }: CandidateApproachProp
       )}
 
       {approach.state === 'populated' && approach.body && (
-        <div className="space-y-4 text-[16px] leading-[1.65] text-body">
-          {approach.body.split('\n\n').map((para, i) => (
-            <p key={i}>{para}</p>
-          ))}
+        <div className="rounded-xl border border-border bg-surface-sunk px-5 py-4">
+          <div className="space-y-4 text-[15px] leading-[1.65] text-body">
+            {approach.body.split('\n\n').map((para, i) => (
+              <p key={i}>{para}</p>
+            ))}
+          </div>
         </div>
       )}
 

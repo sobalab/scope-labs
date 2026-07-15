@@ -18,7 +18,7 @@ export function Scorecard({ scores, locked, onScore }: ScorecardProps) {
       <div className="flex items-baseline justify-between gap-3">
         <span className="eyebrow">Scorecard</span>
         <span className="font-sans text-[10.5px] text-faint">
-          {scored}/{scores.length} scored · hover a score
+          {scored}/{scores.length} scored
         </span>
       </div>
 
