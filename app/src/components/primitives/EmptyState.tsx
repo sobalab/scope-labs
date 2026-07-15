@@ -1,3 +1,5 @@
+import { Button } from './Button';
+
 export type EmptyType = 'loom' | 'demo' | 'description' | 'gallery' | 'readme';
 
 interface EmptyStateProps {
@@ -9,39 +11,41 @@ interface EmptyStateProps {
   signal?: boolean;
 }
 
+// Nudges, not errors — the system phrases missing states as gentle suggestions.
+// One component absorbs every "missing" case; copy and CTA differ by prop.
 const copy: Record<EmptyType, { title: string; detail: string }> = {
   description: {
-    title: 'No approach written',
-    detail: 'This candidate did not explain their reasoning. Treat the absence as a gap.',
+    title: 'No written approach yet',
+    detail:
+      'A short note on their thinking would help place this submission. The absence is worth weighing.',
   },
   readme: {
-    title: 'README missing',
-    detail: 'The repository has no README. For this role that is itself a signal.',
+    title: 'No README in the repo',
+    detail: 'For this role, a missing README is itself a signal.',
   },
   demo: {
     title: 'No demo deployed',
-    detail: 'The candidate did not include a live demo.',
+    detail: 'Nothing to preview here. You can ask for a deployed link.',
   },
   loom: {
     title: 'No walkthrough',
-    detail: 'The candidate did not record a video walkthrough.',
+    detail: 'The candidate did not record one.',
   },
   gallery: {
     title: 'No screenshots',
-    detail: 'The candidate did not attach any images.',
+    detail: 'No images were attached to this submission.',
   },
 };
 
-// One component absorbs every "missing" case. Copy and CTA differ by prop.
-// Neutral and actionable, never editorializing about the candidate.
 export function EmptyState({ type, action, signal = false }: EmptyStateProps) {
   const { title, detail } = copy[type];
   return (
     <div
       className={[
-        'flex flex-col items-start gap-3 rounded-lg border border-dashed px-4 py-6',
-        signal ? 'border-warn/40 bg-warn-soft/30' : 'border-border bg-surface-sunk',
+        'flex flex-col items-start gap-3 rounded-xl border border-dashed px-4 py-6',
+        signal ? 'border-warn/40' : 'border-border-strong bg-surface-sunk',
       ].join(' ')}
+      style={signal ? { background: 'var(--warn-soft)' } : undefined}
     >
       <div className="space-y-1">
         <p className="flex items-center gap-2 text-[14px] font-medium text-ink">
@@ -54,16 +58,12 @@ export function EmptyState({ type, action, signal = false }: EmptyStateProps) {
           )}
           {title}
         </p>
-        <p className="max-w-[42ch] text-[13px] leading-[1.5] text-muted">{detail}</p>
+        <p className="max-w-[46ch] text-[13px] leading-[1.5] text-muted">{detail}</p>
       </div>
       {action && (
-        <button
-          type="button"
-          onClick={action.onClick}
-          className="rounded-md border border-border-strong bg-surface px-3 py-[7px] text-[13px] font-medium text-ink transition-colors hover:border-accent hover:text-accent"
-        >
+        <Button variant="soft" size="sm" onClick={action.onClick}>
           {action.label}
-        </button>
+        </Button>
       )}
     </div>
   );

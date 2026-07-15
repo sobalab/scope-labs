@@ -4,28 +4,32 @@ interface ReviewerNotesProps {
   onChange: (value: string) => void;
 }
 
-// Free text, private to the reviewer. Locked and shown as recorded text once
-// the submission is decided.
+// Free text, private to the reviewer. Soft-glass field over the dock. Phrased as
+// a nudge, not a required field. Locked and shown as recorded text once decided.
 export function ReviewerNotes({ value, locked, onChange }: ReviewerNotesProps) {
   return (
     <div className="space-y-2">
-      <div className="flex items-center justify-between">
-        <h2 className="text-[13px] font-medium uppercase tracking-[0.06em] text-muted">
-          Notes
-        </h2>
-        <span className="text-[11px] text-faint">Private</span>
+      <div className="flex items-baseline justify-between">
+        <span className="eyebrow">Notes</span>
+        <span className="font-sans text-[10px] uppercase tracking-[0.1em] text-faint">
+          private
+        </span>
       </div>
       {locked ? (
-        <p className="rounded-lg border border-border bg-surface-sunk px-3 py-3 text-[13px] leading-[1.55] text-body">
-          {value || 'No notes were recorded.'}
+        <p className="rounded-xl border border-border bg-surface-sunk px-[14px] py-3 text-[13px] leading-[1.55] text-body">
+          {value || 'No note was recorded.'}
         </p>
       ) : (
         <textarea
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          rows={4}
-          placeholder="What tipped your read one way or the other?"
-          className="w-full resize-y rounded-lg border border-border bg-surface-sunk px-3 py-3 text-[13px] leading-[1.55] text-body placeholder:text-faint focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent-soft"
+          rows={3}
+          placeholder="What stood out, and why"
+          className="w-full resize-y rounded-xl border border-border-strong px-[14px] py-[10px] text-[13px] leading-[1.5] text-ink placeholder:text-faint focus:border-accent focus:outline-none"
+          style={{
+            background: 'var(--field-bg)',
+            boxShadow: 'inset 0 1px 2px rgba(20,30,45,.04)',
+          }}
         />
       )}
     </div>

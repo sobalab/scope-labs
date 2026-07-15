@@ -3,6 +3,7 @@ import { SectionCard } from '../primitives/SectionCard';
 import { EmptyState } from '../primitives/EmptyState';
 import { Skeleton } from '../primitives/Skeleton';
 import { LinkHealthIndicator } from '../primitives/LinkHealthIndicator';
+import { Button } from '../primitives/Button';
 import { timeSince } from '../../lib/format';
 
 interface RepoSummaryProps {
@@ -40,7 +41,7 @@ function LanguageBar({ languages }: { languages: { name: string; pct: number }[]
               style={{ background: LANG_SHADES[i] ?? 'var(--border)' }}
             />
             <span className="text-body">{lang.name}</span>
-            <span className="font-mono text-faint">{lang.pct}%</span>
+            <span className="font-sans text-faint">{lang.pct}%</span>
           </span>
         ))}
       </div>
@@ -81,18 +82,14 @@ export function RepoSummary({ repo, onRequestReadme, onRequestAccess }: RepoSumm
               been revoked, or the repo was made private after submission.
             </p>
             {repo.url && (
-              <p className="pt-1 font-mono text-[12px] text-faint">{repo.url}</p>
+              <p className="pt-1 font-sans text-[12px] text-faint">{repo.url}</p>
             )}
           </div>
           <div className="flex items-center gap-4">
             <LinkHealthIndicator health={repo.health ?? 'unreachable'} />
-            <button
-              type="button"
-              onClick={onRequestAccess}
-              className="rounded-md border border-border-strong bg-surface px-3 py-[7px] text-[13px] font-medium text-ink transition-colors hover:border-accent hover:text-accent"
-            >
+            <Button variant="ghost" size="sm" onClick={onRequestAccess}>
               Request access
-            </button>
+            </Button>
           </div>
         </div>
       </SectionCard>
@@ -105,7 +102,7 @@ export function RepoSummary({ repo, onRequestReadme, onRequestAccess }: RepoSumm
       href={repo.url}
       target="_blank"
       rel="noreferrer"
-      className="inline-flex items-center gap-2 font-mono text-[12px] text-muted transition-colors hover:text-accent"
+      className="inline-flex items-center gap-2 font-sans text-[12px] text-muted transition-colors hover:text-accent"
     >
       <GitHubMark />
       {repo.url.replace('https://github.com/', '')}
@@ -134,7 +131,7 @@ export function RepoSummary({ repo, onRequestReadme, onRequestAccess }: RepoSumm
   return (
     <SectionCard title="Repository" aside={repoLink}>
       <div className="space-y-6">
-        <div className="flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-[12px] text-muted">
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-2 font-sans text-[12px] text-muted">
           {repo.commits != null && (
             <span>
               <span className="text-ink">{repo.commits}</span> commits
@@ -153,10 +150,10 @@ export function RepoSummary({ repo, onRequestReadme, onRequestAccess }: RepoSumm
 
         {repo.readme && (
           <div className="rounded-lg border border-border bg-surface-sunk">
-            <div className="flex items-center gap-2 border-b border-border px-4 py-2 font-mono text-[11px] uppercase tracking-[0.06em] text-faint">
+            <div className="flex items-center gap-2 border-b border-border px-4 py-2 font-sans text-[11px] uppercase tracking-[0.06em] text-faint">
               README.md
             </div>
-            <pre className="scroll-region max-h-[280px] overflow-auto whitespace-pre-wrap px-4 py-4 font-mono text-[12.5px] leading-[1.6] text-body">
+            <pre className="scroll-region max-h-[280px] overflow-auto whitespace-pre-wrap px-4 py-4 font-mono text-[12px] leading-[1.6] text-body">
               {repo.readme}
             </pre>
           </div>

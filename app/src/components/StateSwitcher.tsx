@@ -81,7 +81,14 @@ export function StateSwitcher(props: StateSwitcherProps) {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="fixed right-4 top-4 z-40 flex items-center gap-2 rounded-lg border border-border bg-surface px-3 py-2 text-[12px] font-medium text-muted shadow-lg transition-colors hover:text-ink"
+        className="fixed right-4 top-4 z-40 flex items-center gap-2 rounded-full border px-4 py-2 text-[12px] font-medium text-muted transition-colors hover:text-ink"
+        style={{
+          background: 'var(--glass-light-bg)',
+          borderColor: 'var(--glass-light-border)',
+          backdropFilter: 'var(--blur)',
+          WebkitBackdropFilter: 'var(--blur)',
+          boxShadow: 'var(--shadow-glass)',
+        }}
       >
         <span className="h-[7px] w-[7px] rounded-full bg-accent" />
         Demo states
@@ -90,7 +97,16 @@ export function StateSwitcher(props: StateSwitcherProps) {
   }
 
   return (
-    <div className="fixed right-4 top-4 z-40 w-[288px] rounded-xl border border-border bg-surface p-4 shadow-2xl">
+    <div
+      className="fixed right-4 top-4 z-40 w-[288px] rounded-[20px] border p-4"
+      style={{
+        background: 'var(--glass-light-bg)',
+        borderColor: 'var(--glass-light-border)',
+        backdropFilter: 'var(--blur)',
+        WebkitBackdropFilter: 'var(--blur)',
+        boxShadow: 'var(--shadow-glass)',
+      }}
+    >
       <div className="mb-3 flex items-center justify-between">
         <span className="text-[12px] font-medium uppercase tracking-[0.06em] text-faint">
           Demo controls
@@ -153,7 +169,7 @@ export function StateSwitcher(props: StateSwitcherProps) {
           <div className="space-y-2">
             {(Object.keys(BLOCK_STATES) as BlockKey[]).map((key) => (
               <div key={key} className="flex items-center gap-2">
-                <span className="w-[64px] shrink-0 font-mono text-[11px] text-faint">
+                <span className="w-[64px] shrink-0 font-sans text-[11px] text-faint">
                   {key}
                 </span>
                 <div className="flex flex-wrap gap-1">

@@ -14,17 +14,18 @@ interface QueueTableProps {
 export function QueueTable({ submissions, onOpen }: QueueTableProps) {
   const open = submissions.filter((s) => !lifecycleMeta[s.status].terminal).length;
   return (
-    <div className="mx-auto max-w-[1240px] px-8 py-12">
-      <header className="mb-8">
-        <h1 className="text-[24px] font-medium tracking-[-0.01em] text-ink">
-          Review queue
-        </h1>
-        <p className="pt-1 text-[14px] text-muted">
-          {open} open, {submissions.length} total. Pick one to evaluate.
-        </p>
-      </header>
+    <div className="app-bg min-h-screen">
+      <div className="mx-auto max-w-[1240px] px-8 py-12">
+        <header className="mb-8">
+          <h1 className="text-[26px] font-medium tracking-[-0.01em] text-ink">
+            Review queue
+          </h1>
+          <p className="pt-1 text-[14px] text-muted">
+            {open} open, {submissions.length} total. Pick one to evaluate.
+          </p>
+        </header>
 
-      <div className="overflow-x-auto rounded-xl border border-border bg-surface">
+        <div className="overflow-x-auto rounded-[20px] border border-border bg-surface shadow-[var(--shadow-card)]">
         <table className="w-full min-w-[640px] table-fixed border-collapse text-left">
           <colgroup>
             <col className="w-[38%]" />
@@ -51,7 +52,13 @@ export function QueueTable({ submissions, onOpen }: QueueTableProps) {
                 >
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-accent-soft font-mono text-[11px] font-medium text-accent">
+                      <span
+                        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-[11px] font-normal text-white"
+                        style={{
+                          background: 'linear-gradient(150deg, #8ea1b4, var(--accent))',
+                          boxShadow: 'inset 0 1px 0 rgba(255,255,255,.4)',
+                        }}
+                      >
                         {s.candidate.initials}
                       </span>
                       <div className="min-w-0">
@@ -68,14 +75,15 @@ export function QueueTable({ submissions, onOpen }: QueueTableProps) {
                   <td className="px-6 py-4">
                     <StatusBadge label={meta.label} tone={meta.tone} />
                   </td>
-                  <td className="px-6 py-4 text-right font-mono text-[12px] text-muted">
+                  <td className="px-6 py-4 text-right font-sans text-[12px] text-muted">
                     {timeSince(s.submittedAt)}
                   </td>
                 </tr>
               );
             })}
-          </tbody>
-        </table>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

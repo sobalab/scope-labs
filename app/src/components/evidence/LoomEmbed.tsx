@@ -1,6 +1,7 @@
 import type { Submission } from '../../data/submissions';
 import { EmptyState } from '../primitives/EmptyState';
 import { Skeleton } from '../primitives/Skeleton';
+import { Button } from '../primitives/Button';
 
 interface LoomEmbedProps {
   loom: Submission['loom'];
@@ -32,16 +33,12 @@ export function LoomEmbed({ loom, onRequest, onRetry }: LoomEmbedProps) {
             private after submission.
           </p>
           {loom.url && (
-            <p className="pt-1 font-mono text-[12px] text-faint">{loom.url}</p>
+            <p className="pt-1 font-sans text-[12px] text-faint">{loom.url}</p>
           )}
         </div>
-        <button
-          type="button"
-          onClick={onRetry}
-          className="rounded-md border border-border-strong bg-surface px-3 py-[7px] text-[13px] font-medium text-ink transition-colors hover:border-accent hover:text-accent"
-        >
+        <Button variant="ghost" size="sm" onClick={onRetry}>
           Re-request walkthrough
-        </button>
+        </Button>
       </div>
     );
   }

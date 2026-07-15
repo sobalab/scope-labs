@@ -20,7 +20,7 @@ function ScreenshotTile({ name, onOpen }: { name: string; onOpen: () => void }) 
         <div className="flex-1 rounded border border-border bg-surface" />
         <div className="h-6 w-1/2 rounded bg-border/70" />
       </div>
-      <span className="absolute bottom-0 left-0 right-0 bg-surface/85 px-3 py-2 font-mono text-[11px] text-muted backdrop-blur-[1px]">
+      <span className="absolute bottom-0 left-0 right-0 bg-surface/85 px-3 py-2 font-sans text-[11px] text-muted backdrop-blur-[1px]">
         {name}.png
       </span>
     </button>
@@ -85,7 +85,7 @@ export function MediaGallery({ gallery }: MediaGalleryProps) {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between border-b border-border px-4 py-3">
-              <span className="font-mono text-[12px] text-muted">{lightbox}.png</span>
+              <span className="font-sans text-[12px] text-muted">{lightbox}.png</span>
               <button
                 type="button"
                 onClick={() => setLightbox(null)}

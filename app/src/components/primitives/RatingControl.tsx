@@ -7,9 +7,10 @@ interface RatingControlProps {
   label: string;
 }
 
-// A 1..max segmented rating. Filled segments use the accent; this is part of
-// the decision surface, which is the one place the accent is allowed to carry
-// meaning. Locked state shows the recorded score without interaction.
+// The system's segmented scale: a hairline-bordered row of numbered cells, the
+// chosen value filled with the accent. Reads as a discrete pick, and the number
+// stays visible so the score is legible without a separate readout. Locked
+// state shows the recorded value without interaction.
 export function RatingControl({
   value,
   max,
@@ -19,13 +20,13 @@ export function RatingControl({
 }: RatingControlProps) {
   return (
     <div
-      className="flex gap-[6px]"
+      className="flex overflow-hidden rounded-md border border-border-strong"
       role="radiogroup"
       aria-label={label}
     >
       {Array.from({ length: max }, (_, i) => {
         const n = i + 1;
-        const filled = value != null && n <= value;
+        const selected = value === n;
         const interactive = !locked && onChange;
         return (
           <button
@@ -33,19 +34,21 @@ export function RatingControl({
             type="button"
             disabled={locked}
             role="radio"
-            aria-checked={value === n}
+            aria-checked={selected}
             aria-label={`${n} of ${max}`}
             onClick={interactive ? () => onChange(n) : undefined}
             className={[
-              'h-8 flex-1 rounded-[5px] border transition-colors',
-              filled
-                ? 'border-accent bg-accent'
-                : 'border-border bg-surface-sunk',
+              'flex-1 border-r border-border py-[7px] text-center font-sans text-[12px] leading-none transition-colors last:border-r-0',
+              selected
+                ? 'bg-accent text-[var(--accent-ink)]'
+                : 'text-faint',
               locked
                 ? 'cursor-default'
-                : 'cursor-pointer hover:border-accent-line',
+                : 'cursor-pointer hover:bg-accent-soft hover:text-accent-text',
             ].join(' ')}
-          />
+          >
+            {n}
+          </button>
         );
       })}
     </div>

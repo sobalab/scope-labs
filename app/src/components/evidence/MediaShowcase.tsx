@@ -65,7 +65,11 @@ export function MediaShowcase({ submission, onRequest, onRetry }: MediaShowcaseP
       title="Evidence"
       aside={
         kinds.length > 1 ? (
-          <div className="flex gap-1 rounded-lg bg-surface-sunk p-1" role="tablist">
+          <div
+            className="flex gap-[2px] rounded-full border border-border p-[3px]"
+            role="tablist"
+            style={{ background: 'var(--field-bg)' }}
+          >
             {kinds.map((k) => (
               <button
                 key={k}
@@ -74,9 +78,9 @@ export function MediaShowcase({ submission, onRequest, onRetry }: MediaShowcaseP
                 aria-selected={selected === k}
                 onClick={() => setActive(k)}
                 className={[
-                  'rounded-md px-3 py-[6px] text-[12px] font-medium transition-colors',
+                  'rounded-full px-[15px] py-[6px] text-[12px] transition-colors',
                   selected === k
-                    ? 'bg-surface text-ink shadow-sm'
+                    ? 'bg-ink text-[var(--surface)]'
                     : 'text-muted hover:text-ink',
                 ].join(' ')}
               >

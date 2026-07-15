@@ -2,6 +2,7 @@ import type { Submission } from '../../data/submissions';
 import { EmptyState } from '../primitives/EmptyState';
 import { Skeleton } from '../primitives/Skeleton';
 import { LinkHealthIndicator } from '../primitives/LinkHealthIndicator';
+import { Button } from '../primitives/Button';
 
 interface DemoEmbedProps {
   demo: Submission['demo'];
@@ -41,18 +42,14 @@ export function DemoEmbed({ demo, onRequest, onRetry }: DemoEmbedProps) {
             down since submission.
           </p>
           {demo.url && (
-            <p className="pt-1 font-mono text-[12px] text-faint">{demo.url}</p>
+            <p className="pt-1 font-sans text-[12px] text-faint">{demo.url}</p>
           )}
         </div>
         <div className="flex items-center gap-4">
           <LinkHealthIndicator health={demo.health ?? 'unreachable'} />
-          <button
-            type="button"
-            onClick={onRetry}
-            className="rounded-md border border-border-strong bg-surface px-3 py-[7px] text-[13px] font-medium text-ink transition-colors hover:border-accent hover:text-accent"
-          >
+          <Button variant="ghost" size="sm" onClick={onRetry}>
             Re-request working link
-          </button>
+          </Button>
         </div>
       </div>
     );
@@ -67,7 +64,7 @@ export function DemoEmbed({ demo, onRequest, onRetry }: DemoEmbedProps) {
           <span className="h-[9px] w-[9px] rounded-full bg-border-strong" />
           <span className="h-[9px] w-[9px] rounded-full bg-border-strong" />
         </div>
-        <div className="flex-1 truncate rounded-md bg-surface-sunk px-3 py-[5px] font-mono text-[11px] text-muted">
+        <div className="flex-1 truncate rounded-md bg-surface-sunk px-3 py-[5px] font-sans text-[11px] text-muted">
           {demo.url}
         </div>
         <LinkHealthIndicator health={demo.health ?? 'live'} compact />

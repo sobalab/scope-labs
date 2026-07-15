@@ -1,6 +1,6 @@
 import type { Lifecycle, LinkHealth } from '../data/submissions';
 
-export type Tone = 'neutral' | 'accent' | 'ok' | 'warn' | 'danger';
+export type Tone = 'neutral' | 'accent' | 'ink' | 'ok' | 'warn' | 'danger';
 
 export const lifecycleMeta: Record<
   Lifecycle,
@@ -13,8 +13,19 @@ export const lifecycleMeta: Record<
     tone: 'warn',
     terminal: false,
   },
-  advanced: { label: 'Advanced', tone: 'ok', terminal: true },
+  // Advanced is the system's "ink" pill — the one solid, decisive state.
+  advanced: { label: 'Advanced', tone: 'ink', terminal: true },
   rejected: { label: 'Rejected', tone: 'danger', terminal: true },
+};
+
+// Short mono labels for the SpectrumScore marker chips (the full criterion
+// names are too long to ride inside a chip).
+export const rubricShort: Record<string, string> = {
+  'Problem understanding': 'PROBLEM',
+  'Code quality': 'CODE',
+  'Technical approach': 'APPROACH',
+  'Communication': 'COMMS',
+  'Product sense': 'PRODUCT',
 };
 
 export const isTerminal = (status: Lifecycle): boolean =>

@@ -6,14 +6,15 @@ interface SectionCardProps {
   aside?: ReactNode;
   children: ReactNode;
   // Evidence blocks in error get a subtle danger-tinted surround so the
-  // reviewer registers "broken" before reading. Kept as a full treatment,
-  // never a one-sided accent edge.
+  // reviewer registers "broken" before reading. Full treatment, never a
+  // one-sided accent edge.
   variant?: 'default' | 'alert';
 }
 
-// The single evidence container. Full border plus surface fill, no one-sided
-// accent edges, no internal hairline dividers. Blocks are separated on the
-// page by whitespace, not rules.
+// The workhorse opaque evidence card. Per the system, glass never goes on these
+// plain white surfaces — they stay opaque cards with a hairline border and a
+// whisper-soft cool shadow. Generous 20px radius. Blocks are separated on the
+// page by whitespace, not rules; the title is a mono eyebrow.
 export function SectionCard({
   title,
   aside,
@@ -23,16 +24,12 @@ export function SectionCard({
   const surround =
     variant === 'alert'
       ? 'border-danger/25 bg-danger-soft/40'
-      : 'border-border bg-surface';
+      : 'border-border bg-surface shadow-[var(--shadow-card)]';
   return (
-    <section className={`rounded-xl border ${surround} p-6`}>
+    <section className={`rounded-[20px] border ${surround} p-6`}>
       {(title || aside) && (
         <header className="mb-4 flex items-center justify-between gap-4">
-          {title && (
-            <h2 className="text-[13px] font-medium uppercase tracking-[0.06em] text-muted">
-              {title}
-            </h2>
-          )}
+          {title && <h2 className="eyebrow">{title}</h2>}
           {aside}
         </header>
       )}

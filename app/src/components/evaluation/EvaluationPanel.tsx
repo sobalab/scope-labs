@@ -1,8 +1,10 @@
 import type { Submission } from '../../data/submissions';
-import { isTerminal } from '../../lib/lifecycle';
+import { isTerminal, rubricShort } from '../../lib/lifecycle';
+import { GlassPanel } from '../primitives/GlassPanel';
 import { Scorecard } from './Scorecard';
 import { ReviewerNotes } from './ReviewerNotes';
 import { DecisionActions } from './DecisionActions';
+import { SpectrumScore, type SpectrumItem } from './SpectrumScore';
 
 export interface EvaluationHandlers {
   onScore: (criterion: string, value: number) => void;
@@ -16,21 +18,51 @@ export interface EvaluationHandlers {
 interface EvaluationPanelProps {
   submission: Submission;
   handlers: EvaluationHandlers;
-  // When true, drop the outer card chrome (used inside the mobile drawer).
+  // When true, drop the outer glass chrome (used inside the mobile sheet, which
+  // is itself the glass surface).
   bare?: boolean;
 }
 
-// Right column, sticky, always visible on desktop. The one place the accent
-// carries meaning. The fixed 360px width means this surface never reflows.
-export function EvaluationPanel({ submission, handlers, bare = false }: EvaluationPanelProps) {
+// The review dock — the one place the accent carries meaning, and a surface that
+// floats over the ground, so it takes the light frost. Fixed 360px so it never
+// reflows. When the submission is decided, the scorecard is replaced by a
+// read-only dark SpectrumScore: the recorded profile at a glance.
+export function EvaluationPanel({
+  submission,
+  handlers,
+  bare = false,
+}: EvaluationPanelProps) {
   const locked = isTerminal(submission.status);
+
+  const spectrumItems: SpectrumItem[] = submission.scorecard.map((s) => ({
+    label: rubricShort[s.criterion] ?? s.criterion,
+    value: s.score ?? 0,
+  }));
+
   const body = (
     <div className="space-y-6">
-      <Scorecard
-        scores={submission.scorecard}
-        locked={locked}
-        onScore={handlers.onScore}
-      />
+      {locked ? (
+        <div className="space-y-3">
+          <div className="flex items-baseline justify-between">
+            <span className="eyebrow">Scorecard</span>
+            <span className="font-sans text-[10px] uppercase tracking-[0.1em] text-faint">
+              recorded
+            </span>
+          </div>
+          <SpectrumScore
+            finish="dark"
+            items={spectrumItems}
+            axisLeft="Needs work"
+            axisRight="Exceptional"
+          />
+        </div>
+      ) : (
+        <Scorecard
+          scores={submission.scorecard}
+          locked={locked}
+          onScore={handlers.onScore}
+        />
+      )}
       <ReviewerNotes
         value={submission.notes ?? ''}
         locked={locked}
@@ -51,14 +83,8 @@ export function EvaluationPanel({ submission, handlers, bare = false }: Evaluati
   if (bare) return body;
 
   return (
-    <div className="rounded-xl border border-border bg-surface p-6">
-      <div className="mb-4">
-        <h2 className="text-[15px] font-medium text-ink">Evaluation</h2>
-        <p className="pt-1 text-[12px] text-muted">
-          {locked ? 'Recorded decision, read only.' : 'Score, note, decide.'}
-        </p>
-      </div>
+    <GlassPanel finish="light" className="rise rounded-[20px] p-6">
       {body}
-    </div>
+    </GlassPanel>
   );
 }

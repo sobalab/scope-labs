@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { Submission } from '../../data/submissions';
 import { EvaluationPanel, type EvaluationHandlers } from './EvaluationPanel';
 import { StatusBadge } from '../primitives/StatusBadge';
+import { Button } from '../primitives/Button';
 import { lifecycleMeta, isTerminal } from '../../lib/lifecycle';
 
 interface MobileEvaluationDrawerProps {
@@ -22,33 +23,48 @@ export function MobileEvaluationDrawer({
 
   return (
     <div className="lg:hidden">
-      {/* persistent trigger bar */}
-      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-surface px-4 py-3">
+      {/* persistent trigger bar — frosted chrome over the ground */}
+      <div
+        className="fixed inset-x-0 bottom-0 z-30 border-t px-4 py-3"
+        style={{
+          background: 'var(--glass-light-bg)',
+          borderColor: 'var(--glass-light-border)',
+          backdropFilter: 'var(--blur)',
+          WebkitBackdropFilter: 'var(--blur)',
+          boxShadow: '0 -12px 30px -20px rgba(20,30,45,.4)',
+        }}
+      >
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <StatusBadge label={meta.label} tone={meta.tone} />
-            <span className="font-mono text-[12px] text-faint">
-              {scored}/{submission.scorecard.length}
+            <span className="text-[12px] text-faint">
+              {scored}/{submission.scorecard.length} scored
             </span>
           </div>
-          <button
-            type="button"
-            onClick={() => setOpen(true)}
-            className="rounded-lg bg-accent px-4 py-2 text-[14px] font-medium text-accent-ink"
-          >
+          <Button variant="primary" onClick={() => setOpen(true)}>
             {isTerminal(submission.status) ? 'View decision' : 'Score'}
-          </button>
+          </Button>
         </div>
       </div>
 
       {open && (
         <div className="fixed inset-0 z-40 flex flex-col justify-end">
           <div
-            className="absolute inset-0 bg-ink/50"
+            className="absolute inset-0"
             onClick={() => setOpen(false)}
             aria-hidden="true"
+            style={{ background: 'rgba(20,30,45,.5)', backdropFilter: 'blur(2px)' }}
           />
-          <div className="relative max-h-[88vh] overflow-auto rounded-t-2xl border-t border-border bg-surface px-4 pb-6 pt-3">
+          <div
+            className="rise relative max-h-[88vh] overflow-auto rounded-t-[24px] border-t px-4 pb-6 pt-3"
+            style={{
+              background: 'var(--glass-light-bg)',
+              borderColor: 'var(--glass-light-border)',
+              backdropFilter: 'var(--blur)',
+              WebkitBackdropFilter: 'var(--blur)',
+              boxShadow: 'var(--shadow-glass)',
+            }}
+          >
             <div className="mb-4 flex items-center justify-between">
               <span
                 className="mx-auto h-[4px] w-[40px] rounded-full bg-border-strong"

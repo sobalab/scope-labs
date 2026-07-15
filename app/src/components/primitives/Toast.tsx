@@ -17,7 +17,16 @@ export function Toast({ message, onDismiss }: ToastProps) {
   if (!message) return null;
   return (
     <div className="pointer-events-none fixed inset-x-0 bottom-6 z-50 flex justify-center px-6">
-      <div className="pointer-events-auto flex items-center gap-3 rounded-lg border border-border bg-surface px-4 py-3 text-[13px] text-body shadow-lg">
+      <div
+        className="rise pointer-events-auto flex items-center gap-3 rounded-full border px-5 py-3 text-[13px] text-ink"
+        style={{
+          background: 'var(--glass-light-bg)',
+          borderColor: 'var(--glass-light-border)',
+          backdropFilter: 'var(--blur)',
+          WebkitBackdropFilter: 'var(--blur)',
+          boxShadow: 'var(--shadow-glass)',
+        }}
+      >
         <span className="h-[7px] w-[7px] rounded-full bg-accent" />
         {message}
       </div>
