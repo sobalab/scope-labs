@@ -52,7 +52,13 @@ export function EvidencePane({
       <MediaShowcase
         submission={submission}
         onRequest={(kind) =>
-          onRequest(kind === 'demo' ? 'a live demo' : 'a walkthrough video')
+          onRequest(
+            kind === 'demo'
+              ? 'a live demo'
+              : kind === 'gallery'
+                ? 'preview screenshots'
+                : 'a walkthrough video',
+          )
         }
         onRetry={(kind) =>
           onRequest(kind === 'demo' ? 'a working demo link' : 'a working walkthrough link')

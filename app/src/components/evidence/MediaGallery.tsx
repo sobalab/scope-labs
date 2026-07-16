@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import type { Submission } from '../../data/submissions';
 import { Skeleton } from '../primitives/Skeleton';
+import { EmptyState } from '../primitives/EmptyState';
 import { MockAppScreen } from './MockAppScreen';
 
 interface MediaGalleryProps {
   gallery: Submission['gallery'];
+  onRequest?: () => void;
 }
 
 // Each tile is a real-looking screenshot: the same product chrome ("Console"),
@@ -28,8 +30,21 @@ function ScreenshotTile({ name, onOpen }: { name: string; onOpen: () => void }) 
   );
 }
 
-export function MediaGallery({ gallery }: MediaGalleryProps) {
+export function MediaGallery({ gallery, onRequest }: MediaGalleryProps) {
   const [lightbox, setLightbox] = useState<string | null>(null);
+
+  if (gallery.state === 'empty') {
+    return (
+      <EmptyState
+        type="gallery"
+        action={
+          onRequest
+            ? { label: 'Request screenshots', onClick: onRequest }
+            : undefined
+        }
+      />
+    );
+  }
 
   if (gallery.state === 'loading') {
     return (
