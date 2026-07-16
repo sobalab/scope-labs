@@ -44,7 +44,7 @@ export function Button({
     <button
       {...rest}
       className={[
-        'inline-flex items-center justify-center gap-[6px] whitespace-nowrap rounded-full font-sans font-normal leading-none transition-colors duration-150',
+        'inline-flex items-center justify-center gap-[6px] whitespace-nowrap rounded-full font-sans font-normal leading-none transition duration-[var(--dur-fast)] ease-[var(--ease-out)] active:scale-[0.97]',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-line',
         variants[variant],
         sizes[size],

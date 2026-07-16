@@ -27,9 +27,11 @@ export function ThemeToggle({ theme, onToggle }: ThemeToggleProps) {
       aria-pressed={dark}
       aria-label={dark ? 'Switch to light mode' : 'Switch to dark mode'}
       title={dark ? 'Switch to light mode' : 'Switch to dark mode'}
-      className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border-strong bg-surface text-muted transition-colors hover:border-accent hover:text-accent-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-line"
+      className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border-strong bg-surface text-muted transition duration-[var(--dur-fast)] ease-[var(--ease-out)] hover:border-accent hover:text-accent-text active:scale-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-line"
     >
-      {dark ? <SunIcon /> : <MoonIcon />}
+      <span key={theme} className="icon-in flex">
+        {dark ? <SunIcon /> : <MoonIcon />}
+      </span>
     </button>
   );
 }

@@ -60,7 +60,8 @@ export function ReviewerMenu() {
       {open && (
         <div
           role="menu"
-          className="rise absolute right-0 top-full z-40 mt-2 w-[248px] rounded-2xl border border-border bg-surface p-3 shadow-[var(--shadow-float)]"
+          className="menu-in absolute right-0 top-full z-40 mt-2 w-[248px] rounded-2xl border border-border bg-surface p-3 shadow-[var(--shadow-float)]"
+          style={{ transformOrigin: 'top right' }}
         >
           <div className="flex items-center gap-3 px-1 pb-3">
             <Avatar initials={currentReviewer.initials} size={34} />

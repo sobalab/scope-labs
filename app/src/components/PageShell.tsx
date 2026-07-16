@@ -28,11 +28,11 @@ interface PageShellProps {
 
 export function PageShell({ header, evidence, evaluation }: PageShellProps) {
   return (
-    <div className="app-bg min-h-screen text-body">
+    <div className="app-bg fade-in min-h-screen text-body">
       <div className="mx-auto max-w-[1240px]">
         {header}
         <div className="grid grid-cols-1 items-start gap-8 px-8 py-8 lg:grid-cols-[minmax(0,1fr)_360px]">
-          <main className="min-w-0 space-y-6">{evidence}</main>
+          <main className="stagger min-w-0 space-y-6">{evidence}</main>
           <aside className="sticky top-6 hidden lg:block">{evaluation}</aside>
         </div>
       </div>

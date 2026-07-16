@@ -44,7 +44,7 @@ export function QueueTable({
     filter === 'all' ? submissions : submissions.filter((s) => s.status === filter);
 
   return (
-    <div className="app-bg min-h-screen">
+    <div className="app-bg fade-in min-h-screen">
       <div className="mx-auto max-w-[1240px] px-8 py-12">
         <header className="mb-6 flex items-start justify-between gap-4">
           <div>
@@ -174,7 +174,7 @@ function FilterPill({
       onClick={onClick}
       aria-pressed={active}
       className={[
-        'inline-flex items-center gap-[7px] rounded-full border px-[14px] py-[7px] text-[13px] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-line',
+        'inline-flex items-center gap-[7px] rounded-full border px-[14px] py-[7px] text-[13px] transition duration-[var(--dur-fast)] ease-[var(--ease-out)] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-line',
         active
           ? 'border-ink bg-ink text-[var(--surface)]'
           : 'border-border-strong bg-surface text-muted hover:text-ink',

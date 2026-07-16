@@ -67,7 +67,7 @@ export function CandidateNav({ submissions, activeId, onSelect }: CandidateNavPr
           disabled={!prev}
           onClick={() => prev && onSelect(prev.id)}
           aria-label={prev ? `Previous candidate, ${prev.candidate.name}` : 'Previous candidate'}
-          className="flex h-9 w-9 items-center justify-center rounded-l-full text-muted transition-colors hover:text-ink disabled:cursor-default disabled:text-faint/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent-line"
+          className="flex h-9 w-9 items-center justify-center rounded-l-full text-muted transition duration-[var(--dur-fast)] ease-[var(--ease-out)] hover:text-ink active:scale-90 disabled:cursor-default disabled:text-faint/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent-line"
         >
           <Chevron dir="left" />
         </button>
@@ -88,7 +88,7 @@ export function CandidateNav({ submissions, activeId, onSelect }: CandidateNavPr
           disabled={!next}
           onClick={() => next && onSelect(next.id)}
           aria-label={next ? `Next candidate, ${next.candidate.name}` : 'Next candidate'}
-          className="flex h-9 w-9 items-center justify-center rounded-r-full text-muted transition-colors hover:text-ink disabled:cursor-default disabled:text-faint/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent-line"
+          className="flex h-9 w-9 items-center justify-center rounded-r-full text-muted transition duration-[var(--dur-fast)] ease-[var(--ease-out)] hover:text-ink active:scale-90 disabled:cursor-default disabled:text-faint/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent-line"
         >
           <Chevron dir="right" />
         </button>
@@ -97,7 +97,8 @@ export function CandidateNav({ submissions, activeId, onSelect }: CandidateNavPr
       {open && (
         <div
           role="menu"
-          className="rise scroll-region absolute right-0 top-full z-40 mt-2 max-h-[60vh] w-[300px] overflow-auto rounded-2xl border border-border bg-surface p-2 shadow-[var(--shadow-float)]"
+          className="menu-in scroll-region absolute right-0 top-full z-40 mt-2 max-h-[60vh] w-[300px] overflow-auto rounded-2xl border border-border bg-surface p-2 shadow-[var(--shadow-float)]"
+          style={{ transformOrigin: 'top right' }}
         >
           {submissions.map((s) => {
             const meta = lifecycleMeta[s.status];

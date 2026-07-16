@@ -98,13 +98,14 @@ export function StateSwitcher(props: StateSwitcherProps) {
 
   return (
     <div
-      className="scroll-region fixed bottom-[84px] right-4 z-40 max-h-[80vh] w-[288px] overflow-y-auto rounded-2xl border p-4 lg:bottom-4"
+      className="pop-in scroll-region fixed bottom-[84px] right-4 z-40 max-h-[80vh] w-[288px] overflow-y-auto rounded-2xl border p-4 lg:bottom-4"
       style={{
         background: 'var(--glass-light-bg)',
         borderColor: 'var(--glass-light-border)',
         backdropFilter: 'var(--blur)',
         WebkitBackdropFilter: 'var(--blur)',
         boxShadow: 'var(--shadow-glass)',
+        transformOrigin: 'bottom right',
       }}
     >
       <div className="mb-3 flex items-center justify-between">

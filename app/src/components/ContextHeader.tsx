@@ -71,7 +71,7 @@ export function ContextHeader({
           <ThemeToggle theme={theme} onToggle={onToggleTheme} />
         </div>
       </div>
-      <div className="flex items-start gap-4">
+      <div key={submission.id} className="fade-in flex items-start gap-4">
         <div
           className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl font-sans text-[15px] font-normal text-white"
           style={{

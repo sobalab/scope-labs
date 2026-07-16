@@ -31,8 +31,8 @@ export function RatingControl({
       {showTip && (
         <div
           role="tooltip"
-          className="pointer-events-none absolute bottom-full right-0 z-50 mb-2 w-[212px] rounded-lg px-3 py-[9px] text-[11.5px] leading-[1.4] text-white shadow-lg"
-          style={{ background: 'rgba(20,30,45,.94)' }}
+          className="menu-in pointer-events-none absolute bottom-full right-0 z-50 mb-2 w-[212px] rounded-lg px-3 py-[9px] text-[11.5px] leading-[1.4] text-white shadow-lg"
+          style={{ background: 'rgba(20,30,45,.94)', transformOrigin: 'bottom right' }}
         >
           <span className="font-medium">
             {active + 1} of {max}

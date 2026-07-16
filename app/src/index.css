@@ -89,7 +89,13 @@
   --shadow-glass: 0 18px 40px -24px rgba(20, 30, 45, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.75);
   --shadow-dark: 0 34px 56px -44px rgba(20, 30, 45, 0.6);
 
+  /* motion — one curve family, restrained durations */
   --ease: cubic-bezier(0.2, 0.6, 0.2, 1);
+  --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1); /* smooth deceleration */
+  --ease-spring: cubic-bezier(0.34, 1.35, 0.64, 1); /* gentle overshoot for pops */
+  --dur-fast: 130ms;
+  --dur: 220ms;
+  --dur-slow: 340ms;
   color-scheme: light;
 }
 
@@ -229,26 +235,110 @@ body {
   color: var(--muted);
 }
 
-/* content rises 4px on mount — restrained, no bounce */
+/* ── motion system ──────────────────────────────────────────────────────────
+   A small vocabulary, reused everywhere so the platform moves as one piece.
+   Everything is transform/opacity only (no layout), fast, and turned off under
+   prefers-reduced-motion. */
+
 @keyframes rise {
   from {
     opacity: 0;
-    transform: translateY(4px);
+    transform: translateY(6px);
   }
   to {
     opacity: 1;
     transform: none;
   }
 }
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+/* menus/popovers grow from their anchored edge (set transform-origin per use) */
+@keyframes menu-in {
+  from {
+    opacity: 0;
+    transform: scale(0.97) translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+/* a horizontal fill drawing itself in, from the left */
+@keyframes grow-x {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+/* the theme icon rotating in on toggle */
+@keyframes icon-in {
+  from {
+    opacity: 0;
+    transform: rotate(-90deg) scale(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 .rise {
-  animation: rise 0.2s var(--ease);
+  animation: rise var(--dur) var(--ease-out) both;
+}
+.fade-in {
+  animation: fade-in var(--dur) ease both;
+}
+.pop-in {
+  animation: pop-in 180ms var(--ease-spring) both;
+}
+.menu-in {
+  animation: menu-in var(--dur-fast) var(--ease-out) both;
+}
+.icon-in {
+  animation: icon-in var(--dur) var(--ease-out) both;
+}
+/* content entrance: children rise in, lightly staggered top to bottom */
+.stagger > * {
+  animation: rise var(--dur) var(--ease-out) both;
+}
+.stagger > *:nth-child(2) {
+  animation-delay: 50ms;
+}
+.stagger > *:nth-child(3) {
+  animation-delay: 100ms;
+}
+.stagger > *:nth-child(4) {
+  animation-delay: 150ms;
+}
+.stagger > *:nth-child(5) {
+  animation-delay: 200ms;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .rise {
-    animation: none;
-  }
-  * {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
 }

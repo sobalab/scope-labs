@@ -31,7 +31,7 @@ interface EvaluationPanelProps {
 function SaveStatus({ state }: { state: SaveState }) {
   if (state === 'saving') {
     return (
-      <div className="flex items-center gap-[7px] text-[12px] text-muted">
+      <div key="saving" className="flex items-center gap-[7px] text-[12px] text-muted">
         <span className="h-[7px] w-[7px] animate-pulse rounded-full bg-accent" />
         Saving…
       </div>
@@ -39,7 +39,7 @@ function SaveStatus({ state }: { state: SaveState }) {
   }
   if (state === 'saved') {
     return (
-      <div className="flex items-center gap-[7px] text-[12px] text-ok">
+      <div key="saved" className="pop-in flex items-center gap-[7px] text-[12px] text-ok">
         <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true">
           <path d="M3 8.5l3.5 3.5L13 5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
@@ -48,7 +48,7 @@ function SaveStatus({ state }: { state: SaveState }) {
     );
   }
   return (
-    <div className="flex items-center gap-[7px] text-[12px] text-faint">
+    <div key="idle" className="flex items-center gap-[7px] text-[12px] text-faint">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <circle cx="12" cy="12" r="9" />
         <path d="M12 7v5l3 2" />

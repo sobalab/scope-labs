@@ -258,6 +258,7 @@ export default function App() {
             }
             evidence={
               <EvidencePane
+                key={effective.id}
                 submission={effective}
                 onRequest={requestArtifact}
                 onBulkReRequest={bulkReRequest}
@@ -265,6 +266,7 @@ export default function App() {
             }
             evaluation={
               <EvaluationPanel
+                key={effective.id}
                 submission={effective}
                 handlers={handlers}
                 saveState={saveState}

@@ -66,7 +66,7 @@ export function SpectrumScore({
       />
       <div className="relative">
         <div className="flex flex-col gap-[22px]">
-          {items.map((it) => {
+          {items.map((it, i) => {
             const scored = it.value != null && it.value > 0;
             const pct = track(it.value);
             return (
@@ -78,7 +78,14 @@ export function SpectrumScore({
                 {scored && (
                   <div
                     className="absolute left-0"
-                    style={{ width: `${pct}%`, height: 2, background: c.fill }}
+                    style={{
+                      width: `${pct}%`,
+                      height: 2,
+                      background: c.fill,
+                      transformOrigin: 'left center',
+                      animation: 'grow-x var(--dur-slow) var(--ease-out) both',
+                      animationDelay: `${i * 80}ms`,
+                    }}
                   />
                 )}
                 <div
@@ -86,6 +93,8 @@ export function SpectrumScore({
                   style={{
                     left: scored ? `${pct}%` : '10%',
                     transform: 'translate(-50%,-50%)',
+                    animation: 'fade-in var(--dur) var(--ease-out) both',
+                    animationDelay: `${scored ? i * 80 + 180 : i * 80}ms`,
                     padding: '4px 9px',
                     borderRadius: 'var(--radius-sm)',
                     background: scored ? c.chipBg : 'transparent',
