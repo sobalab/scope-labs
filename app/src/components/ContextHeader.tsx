@@ -52,9 +52,9 @@ export function ContextHeader({
           <button
             type="button"
             onClick={onBack}
-            className="inline-flex items-center gap-2 text-[12px] font-medium text-muted transition-colors hover:text-ink"
+            className="group inline-flex items-center gap-2 text-[12px] font-medium text-muted transition duration-[var(--dur-fast)] ease-[var(--ease-out)] hover:text-ink active:scale-[0.97]"
           >
-            <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true" className="transition-transform duration-[var(--dur-fast)] ease-[var(--ease-out)] group-hover:-translate-x-[2px]">
               <path d="M10 3L5 8l5 5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
             Review queue

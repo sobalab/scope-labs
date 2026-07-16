@@ -139,7 +139,7 @@ export function MobileEvaluationDrawer({
           >
             {/* drag handle zone — grab here to pull the sheet down */}
             <div
-              className="flex cursor-grab justify-center pb-2 pt-3 active:cursor-grabbing"
+              className="group flex cursor-grab justify-center pb-2 pt-3 active:cursor-grabbing"
               onPointerDown={onPointerDown}
               onPointerMove={onPointerMove}
               onPointerUp={onPointerUp}
@@ -147,13 +147,16 @@ export function MobileEvaluationDrawer({
               tabIndex={0}
               aria-label="Drag to close"
             >
-              <span className="h-[5px] w-[44px] rounded-full bg-border-strong" aria-hidden="true" />
+              <span
+                className="h-[5px] w-[44px] rounded-full bg-border-strong transition-transform duration-[var(--dur-fast)] ease-[var(--ease-out)] group-hover:scale-x-110 group-active:scale-x-125 group-active:bg-muted"
+                aria-hidden="true"
+              />
             </div>
             <div className="flex justify-end px-4 pb-3 pt-1">
               <button
                 type="button"
                 onClick={closeSheet}
-                className="rounded-full px-3 py-1 text-[13px] font-medium text-muted transition-colors hover:text-ink"
+                className="rounded-full px-3 py-1 text-[13px] font-medium text-muted transition duration-[var(--dur-fast)] ease-[var(--ease-out)] hover:text-ink active:scale-95"
               >
                 Close
               </button>

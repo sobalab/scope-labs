@@ -85,7 +85,7 @@ function CommitList({
             target="_blank"
             rel="noreferrer"
             aria-label="All commits on the repository, opens in a new tab"
-            className="rounded text-[12px] font-medium text-accent-text transition-colors hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-line"
+            className="rounded text-[12px] font-medium text-accent-text transition duration-[var(--dur-fast)] ease-[var(--ease-out)] hover:text-accent active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-line"
           >
             {total != null ? `All ${total}` : 'All commits'}
           </a>
@@ -108,7 +108,7 @@ function CommitList({
               <span className="hidden shrink-0 text-[11px] text-faint sm:inline">
                 {timeSince(c.at)}
               </span>
-              <span className="shrink-0 text-faint opacity-50 transition-all group-hover:text-accent-text group-hover:opacity-100">
+              <span className="shrink-0 text-faint opacity-50 transition-all duration-[var(--dur-fast)] ease-[var(--ease-out)] group-hover:translate-x-[2px] group-hover:text-accent-text group-hover:opacity-100">
                 <ArrowIcon />
               </span>
             </a>
@@ -169,7 +169,7 @@ export function RepoSummary({ repo, onRequestReadme, onRequestAccess }: RepoSumm
       href={repo.url}
       target="_blank"
       rel="noreferrer"
-      className="inline-flex items-center gap-2 font-sans text-[12px] text-muted transition-colors hover:text-accent"
+      className="inline-flex items-center gap-2 font-sans text-[12px] text-muted transition duration-[var(--dur-fast)] ease-[var(--ease-out)] hover:text-accent active:scale-[0.98]"
     >
       <GitHubMark />
       {repo.url.replace('https://github.com/', '')}
@@ -241,7 +241,7 @@ export function RepoSummary({ repo, onRequestReadme, onRequestAccess }: RepoSumm
                       aria-selected={repoView === v}
                       onClick={() => setRepoView(v)}
                       className={[
-                        'rounded-full px-[14px] py-[5px] text-[12px] transition-colors',
+                        'rounded-full px-[14px] py-[5px] text-[12px] transition duration-[var(--dur-fast)] ease-[var(--ease-out)] active:scale-[0.96]',
                         repoView === v
                           ? 'bg-ink text-[var(--surface)]'
                           : 'text-muted hover:text-ink',
@@ -256,18 +256,21 @@ export function RepoSummary({ repo, onRequestReadme, onRequestAccess }: RepoSumm
               )}
             </div>
 
-            {(hasFiles && repoView === 'files') || !repo.readme ? (
-              <FileTree paths={repo.fileTree!} repoUrl={repo.url} readme={repo.readme} />
-            ) : (
-              <div className="rounded-lg border border-border bg-surface-sunk">
-                <div className="flex items-center gap-2 border-b border-border px-4 py-2 font-sans text-[11px] uppercase tracking-[0.06em] text-faint">
-                  README.md
+            {/* Keyed so files and readme crossfade when the tab flips. */}
+            <div key={repoView} className="fade-in">
+              {(hasFiles && repoView === 'files') || !repo.readme ? (
+                <FileTree paths={repo.fileTree!} repoUrl={repo.url} readme={repo.readme} />
+              ) : (
+                <div className="rounded-lg border border-border bg-surface-sunk">
+                  <div className="flex items-center gap-2 border-b border-border px-4 py-2 font-sans text-[11px] uppercase tracking-[0.06em] text-faint">
+                    README.md
+                  </div>
+                  <pre className="scroll-region max-h-[360px] overflow-auto whitespace-pre-wrap px-4 py-4 font-mono text-[12px] leading-[1.6] text-body">
+                    {repo.readme}
+                  </pre>
                 </div>
-                <pre className="scroll-region max-h-[360px] overflow-auto whitespace-pre-wrap px-4 py-4 font-mono text-[12px] leading-[1.6] text-body">
-                  {repo.readme}
-                </pre>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         )}
       </div>

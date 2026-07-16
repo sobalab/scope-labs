@@ -79,7 +79,10 @@ export function CandidateNav({ submissions, activeId, onSelect }: CandidateNavPr
           className="flex items-center gap-[6px] border-x border-border px-3 py-[6px] text-[13px] font-medium text-ink transition-colors hover:bg-surface-sunk focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent-line"
         >
           {index + 1} of {submissions.length}
-          <span className="text-muted">
+          <span
+            className="text-muted transition-transform duration-[var(--dur-fast)] ease-[var(--ease-out)]"
+            style={{ transform: open ? 'rotate(180deg)' : 'none' }}
+          >
             <Chevron dir="down" />
           </span>
         </button>
@@ -111,7 +114,7 @@ export function CandidateNav({ submissions, activeId, onSelect }: CandidateNavPr
                 onClick={() => go(s.id)}
                 aria-current={current}
                 className={[
-                  'flex w-full items-center gap-3 rounded-xl px-2 py-2 text-left transition-colors',
+                  'flex w-full items-center gap-3 rounded-xl px-2 py-2 text-left transition duration-[var(--dur-fast)] ease-[var(--ease-out)] active:scale-[0.98]',
                   current ? 'bg-accent-soft' : 'hover:bg-surface-sunk',
                 ].join(' ')}
               >

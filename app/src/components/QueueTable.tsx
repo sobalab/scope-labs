@@ -109,12 +109,12 @@ export function QueueTable({
                 <tr
                   key={s.id}
                   onClick={() => onOpen(s.id)}
-                  className="cursor-pointer border-t border-border transition-colors hover:bg-surface-sunk"
+                  className="group cursor-pointer border-t border-border transition-colors hover:bg-surface-sunk active:bg-[var(--pill-neutral)]"
                 >
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
                       <span
-                        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-[11px] font-normal text-white"
+                        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-[11px] font-normal text-white transition-transform duration-[var(--dur-fast)] ease-[var(--ease-out)] group-hover:scale-110"
                         style={{
                           background: 'linear-gradient(150deg, #5a7183, #3f5666)',
                           boxShadow: 'inset 0 1px 0 rgba(255,255,255,.35)',

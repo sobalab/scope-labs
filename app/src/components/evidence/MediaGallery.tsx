@@ -15,9 +15,12 @@ function ScreenshotTile({ name, onOpen }: { name: string; onOpen: () => void }) 
     <button
       type="button"
       onClick={onOpen}
-      className="group relative aspect-[16/10] overflow-hidden rounded-xl border border-border bg-surface text-left transition-colors hover:border-accent-line"
+      className="group relative aspect-[16/10] overflow-hidden rounded-xl border border-border bg-surface text-left transition duration-[var(--dur)] ease-[var(--ease-out)] hover:border-accent-line active:scale-[0.99]"
     >
-      <MockAppScreen seed={name} className="absolute inset-0" />
+      <MockAppScreen
+        seed={name}
+        className="absolute inset-0 transition-transform duration-[var(--dur-slow)] ease-[var(--ease-out)] group-hover:scale-[1.04]"
+      />
       <span className="absolute inset-x-0 bottom-0 bg-surface-sunk px-3 py-2 text-[11px] text-muted">
         {name}.png
       </span>
@@ -72,7 +75,7 @@ export function MediaGallery({ gallery }: MediaGalleryProps) {
 
       {lightbox && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-8"
+          className="fade-in fixed inset-0 z-50 flex items-center justify-center p-8"
           style={{ background: 'rgba(20,30,45,.55)', backdropFilter: 'blur(3px)', WebkitBackdropFilter: 'blur(3px)' }}
           onClick={() => setLightbox(null)}
           role="dialog"
@@ -80,7 +83,7 @@ export function MediaGallery({ gallery }: MediaGalleryProps) {
           aria-label={`${lightbox} preview`}
         >
           <div
-            className="w-full max-w-[900px] overflow-hidden rounded-2xl border border-border bg-surface shadow-2xl"
+            className="pop-in w-full max-w-[900px] overflow-hidden rounded-2xl border border-border bg-surface shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between border-b border-border px-4 py-3">
@@ -88,7 +91,7 @@ export function MediaGallery({ gallery }: MediaGalleryProps) {
               <button
                 type="button"
                 onClick={() => setLightbox(null)}
-                className="rounded-md px-2 py-1 text-[13px] font-medium text-muted transition-colors hover:text-ink"
+                className="rounded-md px-2 py-1 text-[13px] font-medium text-muted transition duration-[var(--dur-fast)] ease-[var(--ease-out)] hover:text-ink active:scale-95"
               >
                 Close
               </button>

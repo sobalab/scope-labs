@@ -127,7 +127,7 @@ function TreeNodes({
             onClick={() => onOpenFile(n.path)}
             aria-label={`View ${n.path}`}
             style={pad}
-            className="flex w-full items-center gap-[7px] py-[5px] pr-3 text-left text-[13px] text-body transition-colors hover:bg-surface-sunk hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent-line"
+            className="flex w-full items-center gap-[7px] py-[5px] pr-3 text-left text-[13px] text-body transition duration-[var(--dur-fast)] ease-[var(--ease-out)] hover:bg-surface-sunk hover:text-ink active:bg-[var(--pill-neutral)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent-line"
           >
             <span className="w-[11px] shrink-0" aria-hidden="true" />
             <FileIcon />

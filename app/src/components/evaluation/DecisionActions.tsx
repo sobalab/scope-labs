@@ -96,7 +96,7 @@ export function DecisionActions({
   // The request chooser replaces the action buttons while open.
   if (choosing) {
     return (
-      <div className="space-y-3 rounded-xl border border-border bg-surface-sunk p-4">
+      <div className="pop-in space-y-3 rounded-xl border border-border bg-surface-sunk p-4">
         <div>
           <p className="text-[13px] font-medium text-ink">Ask for stronger materials</p>
           <p className="pt-1 text-[12px] leading-[1.5] text-muted">
@@ -111,7 +111,7 @@ export function DecisionActions({
               <label
                 key={m.key}
                 className={[
-                  'flex cursor-pointer items-start gap-[10px] rounded-lg border px-3 py-[9px] transition-colors',
+                  'flex cursor-pointer items-start gap-[10px] rounded-lg border px-3 py-[9px] transition duration-[var(--dur-fast)] ease-[var(--ease-out)] active:scale-[0.99]',
                   on ? 'border-accent-line bg-surface' : 'border-border bg-surface hover:border-border-strong',
                 ].join(' ')}
               >

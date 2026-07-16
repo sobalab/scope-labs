@@ -64,7 +64,7 @@ export function ProfileLinks({ name, links }: ProfileLinksProps) {
           target="_blank"
           rel="noreferrer"
           aria-label={`${item.describe(name)}, opens in a new tab`}
-          className="inline-flex items-center gap-[7px] rounded-full border border-border-strong bg-surface px-3 py-[6px] text-[12px] text-body transition-colors hover:border-accent hover:text-accent-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-line"
+          className="inline-flex items-center gap-[7px] rounded-full border border-border-strong bg-surface px-3 py-[6px] text-[12px] text-body transition duration-[var(--dur-fast)] ease-[var(--ease-out)] hover:-translate-y-px hover:border-accent hover:text-accent-text active:translate-y-0 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-line"
         >
           <span className="text-muted" aria-hidden="true">
             {item.icon}

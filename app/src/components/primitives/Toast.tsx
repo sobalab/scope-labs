@@ -18,6 +18,7 @@ export function Toast({ message, onDismiss }: ToastProps) {
   return (
     <div className="pointer-events-none fixed inset-x-0 bottom-6 z-50 flex justify-center px-6">
       <div
+        key={message}
         className="rise pointer-events-auto flex items-center gap-3 rounded-full border px-5 py-3 text-[13px] text-ink"
         style={{
           background: 'var(--glass-light-bg)',

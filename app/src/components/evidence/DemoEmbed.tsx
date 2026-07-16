@@ -81,7 +81,7 @@ export function DemoEmbed({ demo, onRequest, onRetry }: DemoEmbedProps) {
           href={demo.url}
           target="_blank"
           rel="noreferrer"
-          className="inline-flex items-center gap-[6px] rounded-md px-2 py-[5px] text-[12px] font-medium text-accent transition-colors hover:bg-accent-soft"
+          className="inline-flex items-center gap-[6px] rounded-md px-2 py-[5px] text-[12px] font-medium text-accent transition duration-[var(--dur-fast)] ease-[var(--ease-out)] hover:bg-accent-soft active:scale-95"
         >
           <OpenIcon />
           Open

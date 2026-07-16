@@ -53,7 +53,11 @@ export function LoomEmbed({ loom, onRequest, onRetry }: LoomEmbedProps) {
       rel="noreferrer"
       className="group relative block aspect-[16/9] w-full overflow-hidden rounded-xl border border-border bg-surface-sunk"
     >
-      <MockAppScreen seed={loom.url ?? 'loom'} title="Console" className="absolute inset-0" />
+      <MockAppScreen
+        seed={loom.url ?? 'loom'}
+        title="Console"
+        className="absolute inset-0 transition-transform duration-[var(--dur-slow)] ease-[var(--ease-out)] group-hover:scale-[1.03]"
+      />
       <div
         className="absolute inset-0 transition-colors"
         style={{ background: 'rgba(20,30,45,.34)' }}

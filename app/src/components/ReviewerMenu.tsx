@@ -48,11 +48,19 @@ export function ReviewerMenu() {
         aria-haspopup="menu"
         aria-expanded={open}
         aria-label={`Signed in as ${currentReviewer.name}. ${others.length} others reviewing`}
-        className="flex items-center gap-2 rounded-full border border-border-strong bg-surface py-1 pl-1 pr-3 transition-colors hover:border-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-line"
+        className="flex items-center gap-2 rounded-full border border-border-strong bg-surface py-1 pl-1 pr-3 transition duration-[var(--dur-fast)] ease-[var(--ease-out)] hover:border-accent active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-line"
       >
         <Avatar initials={currentReviewer.initials} />
         <span className="text-[13px] font-medium text-ink">{currentReviewer.name}</span>
-        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true" className="text-muted">
+        <svg
+          width="12"
+          height="12"
+          viewBox="0 0 16 16"
+          fill="none"
+          aria-hidden="true"
+          className="text-muted transition-transform duration-[var(--dur-fast)] ease-[var(--ease-out)]"
+          style={{ transform: open ? 'rotate(180deg)' : 'none' }}
+        >
           <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </button>

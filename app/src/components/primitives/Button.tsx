@@ -15,7 +15,8 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 // hairline; soft is the accent tint. Danger is a ghost that warms on hover, so
 // reject reads as available but never shouts.
 const variants: Record<Variant, string> = {
-  primary: 'bg-ink text-[var(--surface)] border border-ink hover:bg-[var(--dark-glass-2)]',
+  primary:
+    'bg-ink text-[var(--surface)] border border-ink hover:bg-[var(--dark-glass-2)] hover:-translate-y-px hover:shadow-[var(--shadow-card)] active:translate-y-0',
   ghost:
     'bg-surface text-[var(--dark-glass)] border border-border-strong hover:border-ink hover:text-ink',
   soft: 'bg-accent-soft text-accent-text border border-transparent hover:bg-[var(--accent-line)]',

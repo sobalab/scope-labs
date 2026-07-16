@@ -47,7 +47,7 @@ export function DecisionDialog({
   // backdrop-filter, which would otherwise be its containing block.
   return createPortal(
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-6"
+      className="fade-in fixed inset-0 z-50 flex items-center justify-center p-6"
       style={{ background: 'rgba(20,30,45,.55)', backdropFilter: 'blur(3px)', WebkitBackdropFilter: 'blur(3px)' }}
       onClick={onCancel}
       role="dialog"
@@ -57,7 +57,7 @@ export function DecisionDialog({
       <div
         ref={cardRef}
         tabIndex={-1}
-        className="rise w-full max-w-[440px] rounded-2xl border border-border bg-surface p-6 shadow-2xl focus:outline-none"
+        className="pop-in w-full max-w-[440px] rounded-2xl border border-border bg-surface p-6 shadow-2xl focus:outline-none"
         onClick={(e) => e.stopPropagation()}
       >
         <h2 id="decision-dialog-title" className="text-[18px] font-medium text-ink">

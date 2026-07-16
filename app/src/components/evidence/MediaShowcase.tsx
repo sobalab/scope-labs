@@ -78,7 +78,7 @@ export function MediaShowcase({ submission, onRequest, onRetry }: MediaShowcaseP
                 aria-selected={selected === k}
                 onClick={() => setActive(k)}
                 className={[
-                  'rounded-full px-[15px] py-[6px] text-[12px] transition-colors',
+                  'rounded-full px-[15px] py-[6px] text-[12px] transition duration-[var(--dur-fast)] ease-[var(--ease-out)] active:scale-[0.96]',
                   selected === k
                     ? 'bg-ink text-[var(--surface)]'
                     : 'text-muted hover:text-ink',
@@ -94,21 +94,24 @@ export function MediaShowcase({ submission, onRequest, onRetry }: MediaShowcaseP
         ) : undefined
       }
     >
-      {selected === 'demo' && (
-        <DemoEmbed
-          demo={submission.demo}
-          onRequest={() => onRequest('demo')}
-          onRetry={() => onRetry('demo')}
-        />
-      )}
-      {selected === 'gallery' && <MediaGallery gallery={submission.gallery} />}
-      {selected === 'loom' && (
-        <LoomEmbed
-          loom={submission.loom}
-          onRequest={() => onRequest('loom')}
-          onRetry={() => onRetry('loom')}
-        />
-      )}
+      {/* Keyed so the panel crossfades when the reviewer switches tabs. */}
+      <div key={selected} className="fade-in">
+        {selected === 'demo' && (
+          <DemoEmbed
+            demo={submission.demo}
+            onRequest={() => onRequest('demo')}
+            onRetry={() => onRetry('demo')}
+          />
+        )}
+        {selected === 'gallery' && <MediaGallery gallery={submission.gallery} />}
+        {selected === 'loom' && (
+          <LoomEmbed
+            loom={submission.loom}
+            onRequest={() => onRequest('loom')}
+            onRetry={() => onRetry('loom')}
+          />
+        )}
+      </div>
     </SectionCard>
   );
 }

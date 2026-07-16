@@ -31,7 +31,7 @@ export function CodeViewer({ path, content, lang, repoUrl, onClose }: CodeViewer
 
   return createPortal(
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-6"
+      className="fade-in fixed inset-0 z-50 flex items-center justify-center p-6"
       style={{ background: 'rgba(20,30,45,.55)', backdropFilter: 'blur(3px)', WebkitBackdropFilter: 'blur(3px)' }}
       onClick={onClose}
       role="dialog"
@@ -41,7 +41,7 @@ export function CodeViewer({ path, content, lang, repoUrl, onClose }: CodeViewer
       <div
         ref={cardRef}
         tabIndex={-1}
-        className="flex max-h-[85vh] w-full max-w-[820px] flex-col overflow-hidden rounded-2xl border border-border bg-surface shadow-2xl focus:outline-none"
+        className="pop-in flex max-h-[85vh] w-full max-w-[820px] flex-col overflow-hidden rounded-2xl border border-border bg-surface shadow-2xl focus:outline-none"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between gap-4 border-b border-border px-5 py-3">
@@ -58,7 +58,7 @@ export function CodeViewer({ path, content, lang, repoUrl, onClose }: CodeViewer
                 target="_blank"
                 rel="noreferrer"
                 aria-label={`Open ${path} in the repository, opens in a new tab`}
-                className="inline-flex items-center gap-[6px] text-[12px] font-medium text-accent-text transition-colors hover:text-accent"
+                className="inline-flex items-center gap-[6px] text-[12px] font-medium text-accent-text transition duration-[var(--dur-fast)] ease-[var(--ease-out)] hover:text-accent active:scale-95"
               >
                 <OpenIcon />
                 Open in repo
@@ -67,7 +67,7 @@ export function CodeViewer({ path, content, lang, repoUrl, onClose }: CodeViewer
             <button
               type="button"
               onClick={onClose}
-              className="text-[13px] font-medium text-muted transition-colors hover:text-ink"
+              className="text-[13px] font-medium text-muted transition duration-[var(--dur-fast)] ease-[var(--ease-out)] hover:text-ink active:scale-95"
             >
               Close
             </button>
