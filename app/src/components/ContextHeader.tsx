@@ -86,9 +86,12 @@ export function ContextHeader({
             below on narrow widths it stays aligned under the name, not the avatar. */}
         <div className="flex min-w-0 flex-1 flex-wrap items-start justify-between gap-x-6 gap-y-4">
           <div className="min-w-0">
-            <h1 className="text-[24px] font-medium leading-[1.1] tracking-[-0.01em] text-ink">
-              {submission.candidate.name}
-            </h1>
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+              <h1 className="text-[24px] font-medium leading-[1.1] tracking-[-0.01em] text-ink">
+                {submission.candidate.name}
+              </h1>
+              <StatusBadge label={meta.label} tone={meta.tone} />
+            </div>
             <p className="pt-[3px] text-[13.5px] leading-[1.35] text-muted">
               {submission.role} · {submission.challengeTitle}
             </p>
@@ -99,33 +102,34 @@ export function ContextHeader({
               />
             </div>
           </div>
-          <div className="flex flex-col items-start gap-[7px] lg:items-end">
-            <StatusBadge label={meta.label} tone={meta.tone} />
-          <div className="flex items-center gap-[6px] lg:justify-end">
-            <ClockIcon />
-            <span className="text-[13px] font-medium text-ink">
-              {formatDuration(submission.timeSpentMinutes)}
-            </span>
-            <span className="text-[12px] text-muted">worked</span>
-            <span
-              className={
-                submission.timeSpentMinutes > suggestedTimeMinutes
-                  ? 'text-[11px] text-warn'
-                  : 'text-[11px] text-faint'
-              }
-            >
-              {submission.timeSpentMinutes > suggestedTimeMinutes ? 'over' : 'within'}{' '}
-              the {formatDuration(suggestedTimeMinutes)} guide
-            </span>
-          </div>
-          <p className="font-sans text-[11px] text-muted">
-            submitted {timeSince(submission.submittedAt)}
-          </p>
-          {submission.decidedBy && submission.decidedAt && (
+          {/* Two lines that read level with the identity on the left: the time
+              row sits against the name, "submitted" against the subtitle. */}
+          <div className="flex flex-col items-start gap-[3px] lg:items-end">
+            <div className="flex min-h-[26px] items-center gap-[6px] lg:justify-end">
+              <ClockIcon />
+              <span className="text-[13px] font-medium text-ink">
+                {formatDuration(submission.timeSpentMinutes)}
+              </span>
+              <span className="text-[12px] text-muted">worked</span>
+              <span
+                className={
+                  submission.timeSpentMinutes > suggestedTimeMinutes
+                    ? 'text-[11px] text-warn'
+                    : 'text-[11px] text-faint'
+                }
+              >
+                {submission.timeSpentMinutes > suggestedTimeMinutes ? 'over' : 'within'}{' '}
+                the {formatDuration(suggestedTimeMinutes)} guide
+              </span>
+            </div>
             <p className="font-sans text-[11px] text-muted">
-              {meta.label.toLowerCase()} by {submission.decidedBy} · {formatDateTime(submission.decidedAt)}
+              submitted {timeSince(submission.submittedAt)}
             </p>
-          )}
+            {submission.decidedBy && submission.decidedAt && (
+              <p className="pt-[2px] font-sans text-[11px] text-muted">
+                {meta.label.toLowerCase()} by {submission.decidedBy} · {formatDateTime(submission.decidedAt)}
+              </p>
+            )}
           </div>
         </div>
       </div>

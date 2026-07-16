@@ -1,6 +1,6 @@
 import type { Lifecycle, LinkHealth } from '../data/submissions';
 
-export type Tone = 'neutral' | 'accent' | 'ink' | 'ok' | 'warn' | 'danger';
+export type Tone = 'neutral' | 'accent' | 'ok' | 'warn' | 'danger';
 
 export const lifecycleMeta: Record<
   Lifecycle,
@@ -13,8 +13,10 @@ export const lifecycleMeta: Record<
     tone: 'warn',
     terminal: false,
   },
-  // Advanced is the system's "ink" pill — the one solid, decisive state.
-  advanced: { label: 'Advanced', tone: 'ink', terminal: true },
+  // The two terminal states read as a positive / negative pair: advanced is
+  // the green "ok" pill, rejected the red "danger" pill. Neither uses ink, so
+  // a status never reads as the primary decision button.
+  advanced: { label: 'Advanced', tone: 'ok', terminal: true },
   rejected: { label: 'Rejected', tone: 'danger', terminal: true },
 };
 
