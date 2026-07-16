@@ -71,18 +71,20 @@ export function ContextHeader({
           <ThemeToggle theme={theme} onToggle={onToggleTheme} />
         </div>
       </div>
-      <div className="flex flex-wrap items-start justify-between gap-6">
-        <div className="flex items-start gap-4">
-          <div
-            className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl font-sans text-[15px] font-normal text-white"
-            style={{
-              background: 'linear-gradient(150deg, #5a7183, #3f5666)',
-              boxShadow: 'inset 0 1px 0 rgba(255,255,255,.35)',
-            }}
-            aria-hidden="true"
-          >
-            {submission.candidate.initials}
-          </div>
+      <div className="flex items-start gap-4">
+        <div
+          className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl font-sans text-[15px] font-normal text-white"
+          style={{
+            background: 'linear-gradient(150deg, #5a7183, #3f5666)',
+            boxShadow: 'inset 0 1px 0 rgba(255,255,255,.35)',
+          }}
+          aria-hidden="true"
+        >
+          {submission.candidate.initials}
+        </div>
+        {/* Everything textual shares this column, so when the meta block wraps
+            below on narrow widths it stays aligned under the name, not the avatar. */}
+        <div className="flex min-w-0 flex-1 flex-wrap items-start justify-between gap-x-6 gap-y-4">
           <div className="min-w-0">
             <h1 className="text-[24px] font-medium leading-[1.1] tracking-[-0.01em] text-ink">
               {submission.candidate.name}
@@ -97,10 +99,9 @@ export function ContextHeader({
               />
             </div>
           </div>
-        </div>
-        <div className="flex flex-col items-start gap-[7px] sm:items-end">
-          <StatusBadge label={meta.label} tone={meta.tone} />
-          <div className="flex items-center gap-[6px] sm:justify-end">
+          <div className="flex flex-col items-start gap-[7px] lg:items-end">
+            <StatusBadge label={meta.label} tone={meta.tone} />
+          <div className="flex items-center gap-[6px] lg:justify-end">
             <ClockIcon />
             <span className="text-[13px] font-medium text-ink">
               {formatDuration(submission.timeSpentMinutes)}
@@ -125,6 +126,7 @@ export function ContextHeader({
               {meta.label.toLowerCase()} by {submission.decidedBy} · {formatDateTime(submission.decidedAt)}
             </p>
           )}
+          </div>
         </div>
       </div>
     </header>

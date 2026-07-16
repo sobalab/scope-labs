@@ -20,6 +20,8 @@ interface QueueTableProps {
   onOpen: (id: string) => void;
   theme: 'light' | 'dark';
   onToggleTheme: () => void;
+  // When the current reviewer last opened each candidate, by id.
+  lastOpened: Record<string, string>;
 }
 
 // A table is right for the queue (rows to scan) and deliberately wrong for the
@@ -30,6 +32,7 @@ export function QueueTable({
   onOpen,
   theme,
   onToggleTheme,
+  lastOpened,
 }: QueueTableProps) {
   const open = submissions.filter((s) => !lifecycleMeta[s.status].terminal).length;
   const [filter, setFilter] = useState<Lifecycle | 'all'>('all');
@@ -82,11 +85,12 @@ export function QueueTable({
         </div>
 
         <div className="overflow-x-auto rounded-2xl border border-border bg-surface shadow-[var(--shadow-card)]">
-        <table className="w-full min-w-[640px] table-fixed border-collapse text-left">
+        <table className="w-full min-w-[780px] table-fixed border-collapse text-left">
           <colgroup>
-            <col className="w-[38%]" />
             <col className="w-[30%]" />
-            <col className="w-[18%]" />
+            <col className="w-[24%]" />
+            <col className="w-[16%]" />
+            <col className="w-[16%]" />
             <col className="w-[14%]" />
           </colgroup>
           <thead>
@@ -94,6 +98,7 @@ export function QueueTable({
               <th className="px-6 py-3 font-medium">Candidate</th>
               <th className="px-6 py-3 font-medium">Challenge</th>
               <th className="px-6 py-3 font-medium">Status</th>
+              <th className="px-6 py-3 font-medium">Last reviewed</th>
               <th className="px-6 py-3 text-right font-medium">Submitted</th>
             </tr>
           </thead>
@@ -130,6 +135,13 @@ export function QueueTable({
                   </td>
                   <td className="px-6 py-4">
                     <StatusBadge label={meta.label} tone={meta.tone} />
+                  </td>
+                  <td className="px-6 py-4 text-[12px]">
+                    {lastOpened[s.id] ? (
+                      <span className="text-muted">{timeSince(lastOpened[s.id])}</span>
+                    ) : (
+                      <span className="text-faint">Not opened</span>
+                    )}
                   </td>
                   <td className="px-6 py-4 text-right font-sans text-[12px] text-muted">
                     {timeSince(s.submittedAt)}
