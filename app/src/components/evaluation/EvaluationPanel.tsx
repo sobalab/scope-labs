@@ -117,8 +117,14 @@ export function EvaluationPanel({
 
   if (bare) return body;
 
+  // Cap to the viewport (minus the sticky top-6 offset, top and bottom) and
+  // scroll inside the frame, so a tall state like the request-more chooser
+  // stays fully reachable instead of overflowing below the fold.
   return (
-    <GlassPanel finish="light" className="rise rounded-2xl p-6">
+    <GlassPanel
+      finish="light"
+      className="rise scroll-region max-h-[calc(100vh-48px)] overflow-y-auto rounded-2xl p-6"
+    >
       {body}
     </GlassPanel>
   );
