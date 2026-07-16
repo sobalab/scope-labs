@@ -109,7 +109,7 @@ export default function App() {
   const [store, setStore] = useState<Record<string, Submission>>(() =>
     Object.fromEntries(fixtures.map((s) => [s.id, s])),
   );
-  const [view, setView] = useState<'queue' | 'showcase'>('showcase');
+  const [view, setView] = useState<'queue' | 'showcase'>('queue');
   const [activeId, setActiveId] = useState<string>(fixtures[0].id);
   const [sim, setSim] = useState<SimState>(emptySim);
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
