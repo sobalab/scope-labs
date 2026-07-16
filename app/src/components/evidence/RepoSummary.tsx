@@ -5,11 +5,13 @@ import { EmptyState } from '../primitives/EmptyState';
 import { Skeleton } from '../primitives/Skeleton';
 import { LinkHealthIndicator } from '../primitives/LinkHealthIndicator';
 import { Button } from '../primitives/Button';
+import { Chip } from '../primitives/Chip';
 import { FileTree } from './FileTree';
 import { timeSince } from '../../lib/format';
 
 interface RepoSummaryProps {
   repo: Submission['repo'];
+  techStack: string[];
   onRequestReadme: () => void;
   onRequestAccess: () => void;
 }
@@ -75,9 +77,11 @@ function CommitList({
   repoUrl?: string;
   total?: number;
 }) {
+  // Boxed and tinted so the commit history reads as its own object inside the
+  // card, distinct from the bare language bar and metadata around it.
   return (
-    <div className="space-y-2">
-      <div className="flex items-baseline justify-between gap-3">
+    <div className="overflow-hidden rounded-xl border border-border bg-surface-sunk">
+      <div className="flex items-baseline justify-between gap-3 border-b border-border px-4 py-[10px]">
         <span className="eyebrow">Recent commits</span>
         {repoUrl && (
           <a
@@ -91,7 +95,7 @@ function CommitList({
           </a>
         )}
       </div>
-      <ul className="space-y-[2px]">
+      <ul className="p-2">
         {commits.map((c) => (
           <li key={c.sha}>
             <a
@@ -99,7 +103,7 @@ function CommitList({
               target="_blank"
               rel="noreferrer"
               aria-label={`Commit ${c.sha}: ${c.message}, opens in a new tab`}
-              className="group -mx-2 flex items-center gap-3 rounded-lg px-2 py-[7px] transition-colors hover:bg-surface-sunk focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent-line"
+              className="group flex items-center gap-3 rounded-lg px-3 py-[8px] transition-colors hover:bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent-line"
             >
               <span className="min-w-0 flex-1 truncate text-[13px] text-body transition-colors group-hover:text-ink">
                 {c.message}
@@ -119,9 +123,23 @@ function CommitList({
   );
 }
 
-export function RepoSummary({ repo, onRequestReadme, onRequestAccess }: RepoSummaryProps) {
+export function RepoSummary({
+  repo,
+  techStack,
+  onRequestReadme,
+  onRequestAccess,
+}: RepoSummaryProps) {
   // Which of the codebase views is showing: the file structure or the README.
   const [repoView, setRepoView] = useState<'files' | 'readme'>('files');
+
+  // What the codebase is built with — leads the card, next to the language bar.
+  const stackChips = techStack.length > 0 && (
+    <div className="flex flex-wrap gap-2">
+      {techStack.map((t) => (
+        <Chip key={t} label={t} />
+      ))}
+    </div>
+  );
 
   if (repo.state === 'loading') {
     return (
@@ -181,6 +199,7 @@ export function RepoSummary({ repo, onRequestReadme, onRequestAccess }: RepoSumm
     return (
       <SectionCard title="Repository" aside={repoLink}>
         <div className="space-y-6">
+          {stackChips}
           {repo.languages && repo.languages.length > 0 && (
             <LanguageBar languages={repo.languages} />
           )}
@@ -199,18 +218,7 @@ export function RepoSummary({ repo, onRequestReadme, onRequestAccess }: RepoSumm
   return (
     <SectionCard title="Repository" aside={repoLink}>
       <div className="space-y-6">
-        <div className="flex flex-wrap items-center gap-x-6 gap-y-2 font-sans text-[12px] text-muted">
-          {repo.commits != null && (
-            <span>
-              <span className="text-ink">{repo.commits}</span> commits
-            </span>
-          )}
-          {repo.lastCommit && (
-            <span>
-              last commit <span className="text-ink">{timeSince(repo.lastCommit)}</span>
-            </span>
-          )}
-        </div>
+        {stackChips}
 
         {repo.languages && repo.languages.length > 0 && (
           <LanguageBar languages={repo.languages} />
@@ -271,6 +279,21 @@ export function RepoSummary({ repo, onRequestReadme, onRequestAccess }: RepoSumm
                 </div>
               )}
             </div>
+          </div>
+        )}
+
+        {(repo.commits != null || repo.lastCommit) && (
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2 font-sans text-[12px] text-muted">
+            {repo.commits != null && (
+              <span>
+                <span className="text-ink">{repo.commits}</span> commits
+              </span>
+            )}
+            {repo.lastCommit && (
+              <span>
+                last commit <span className="text-ink">{timeSince(repo.lastCommit)}</span>
+              </span>
+            )}
           </div>
         )}
       </div>

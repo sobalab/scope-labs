@@ -2,7 +2,6 @@ import type { Submission } from '../../data/submissions';
 import { CandidateApproach } from './CandidateApproach';
 import { MediaShowcase } from './MediaShowcase';
 import { RepoSummary } from './RepoSummary';
-import { TechStack } from './TechStack';
 import { Button } from '../primitives/Button';
 
 interface EvidencePaneProps {
@@ -12,8 +11,9 @@ interface EvidencePaneProps {
 }
 
 // Left column, scroll region. Order is deliberate: the written approach leads
-// (fastest read on understanding), then the best-available media, then repo
-// signal, then the stack. Blocks are separated by whitespace, not rules.
+// (fastest read on understanding), then the best-available media, then the repo
+// signal — which now carries the tech stack up top and commit metadata at the
+// foot. Blocks are separated by whitespace, not rules.
 export function EvidencePane({
   submission,
   onRequest,
@@ -60,10 +60,10 @@ export function EvidencePane({
       />
       <RepoSummary
         repo={submission.repo}
+        techStack={submission.techStack}
         onRequestReadme={() => onRequest('a README')}
         onRequestAccess={() => onRequest('repository access')}
       />
-      <TechStack techStack={submission.techStack} />
     </>
   );
 }
