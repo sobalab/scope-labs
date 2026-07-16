@@ -33,6 +33,16 @@ const SCORE: Record<Exclude<Submission['demo']['state'], never>, number> = {
   empty: 0,
 };
 
+// A per-tab status dot so the reviewer sees at a glance which channels actually
+// carry something — green present, red broken, a pulse while checking, nothing
+// when the channel is empty.
+const DOT: Record<Exclude<Submission['demo']['state'], never>, string | null> = {
+  populated: 'bg-ok',
+  loading: 'bg-faint animate-pulse',
+  error: 'bg-danger',
+  empty: null,
+};
+
 // A switcher, not a stack. All three channels are always offered as tabs,
 // submitted or not, so the reviewer can check any of them; each child owns its
 // own loading / error / empty state, so an unsubmitted channel reads as a clear
@@ -74,8 +84,10 @@ export function MediaShowcase({ submission, onRequest, onRetry }: MediaShowcaseP
               ].join(' ')}
             >
               {TAB_LABEL[k]}
-              {submission[k].state === 'error' && (
-                <span className="ml-[6px] inline-block h-[6px] w-[6px] rounded-full bg-danger align-middle" />
+              {DOT[submission[k].state] && (
+                <span
+                  className={`ml-[6px] inline-block h-[6px] w-[6px] rounded-full align-middle ${DOT[submission[k].state]}`}
+                />
               )}
             </button>
           ))}
@@ -89,6 +101,8 @@ export function MediaShowcase({ submission, onRequest, onRetry }: MediaShowcaseP
             demo={submission.demo}
             onRequest={() => onRequest('demo')}
             onRetry={() => onRetry('demo')}
+            hasGallery={submission.gallery.state === 'populated'}
+            onViewGallery={() => setActive('gallery')}
           />
         )}
         {active === 'gallery' && (

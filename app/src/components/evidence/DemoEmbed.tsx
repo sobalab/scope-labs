@@ -17,6 +17,9 @@ interface DemoEmbedProps {
   demo: Submission['demo'];
   onRequest: () => void;
   onRetry: () => void;
+  // When the live demo is down but screenshots exist, offer them as a fallback.
+  hasGallery?: boolean;
+  onViewGallery?: () => void;
 }
 
 const OpenIcon = () => (
@@ -25,7 +28,13 @@ const OpenIcon = () => (
   </svg>
 );
 
-export function DemoEmbed({ demo, onRequest, onRetry }: DemoEmbedProps) {
+export function DemoEmbed({
+  demo,
+  onRequest,
+  onRetry,
+  hasGallery = false,
+  onViewGallery,
+}: DemoEmbedProps) {
   if (demo.state === 'loading') {
     return <Skeleton className="aspect-[16/10] w-full" />;
   }
@@ -49,13 +58,19 @@ export function DemoEmbed({ demo, onRequest, onRetry }: DemoEmbedProps) {
           <p className="max-w-[46ch] text-[13px] leading-[1.5] text-muted">
             The deployed URL did not respond on the last check. It may have spun
             down since submission.
+            {hasGallery && ' The screenshots are still available to review in the meantime.'}
           </p>
           {demo.url && (
             <p className="pt-1 font-sans text-[12px] text-faint">{demo.url}</p>
           )}
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex flex-wrap items-center gap-3">
           <LinkHealthIndicator health={demo.health ?? 'unreachable'} />
+          {hasGallery && onViewGallery && (
+            <Button variant="soft" size="sm" onClick={onViewGallery}>
+              View screenshots
+            </Button>
+          )}
           <Button variant="ghost" size="sm" onClick={onRetry}>
             Re-request working link
           </Button>
